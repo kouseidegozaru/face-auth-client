@@ -23,3 +23,12 @@ const TopHeader = ({ children }) => {
     );
 };
 
+const Title = () => {
+    return (
+        <div className="flex items-center ml-4">
+            <TitleIcon className="w-8 h-8 fill-none mr-2 stroke-text"></TitleIcon>
+            <div className="font-title text-3xl">Face Auth</div>
+        </div>
+    );
+}
+
