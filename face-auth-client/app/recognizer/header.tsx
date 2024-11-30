@@ -67,3 +67,10 @@ const BottomHeader = ({ children }) => {
     );
 };
 
+const HomeButton = () => {
+    const onClick = () => {}// TODO: 画面遷移
+    return (
+        <Button className="font-light h-[27px] mr-4" onClick={onClick}>Home</Button>
+    );
+}
+
