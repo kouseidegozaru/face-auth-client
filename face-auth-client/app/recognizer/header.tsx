@@ -32,3 +32,29 @@ const Title = () => {
     );
 }
 
+const UserNameDisplay = ({ children }: { children: React.ReactNode }) => {// TODO: ユーザー名を取得
+    if (!children) {
+        children = "User";
+    }
+
+    return (
+        <div className="whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] inline-block">
+            {children}
+        </div>
+    );
+}
+
+const UserProfile = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <div className="flex items-center justify-center h-full w-[200px] mr-4 border-line border-l-2 rounded-none">
+            <UserIcon className="w-5 h-5 fill-none mr-2 stroke-subtext stroke-2"></UserIcon>
+            <div className="font-default h-full flex items-center text-1xl text-subtext">
+                <UserNameDisplay>
+                    {children}
+                </UserNameDisplay>
+            </div>
+        </div>
+    );
+}
+
+
