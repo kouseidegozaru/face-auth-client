@@ -58,3 +58,12 @@ const UserProfile = ({ children }: { children: React.ReactNode }) => {
 }
 
 
+// ヘッダー下部
+const BottomHeader = ({ children }) => {
+    return (
+        <div className="bg-header h-[40px] w-full flex items-center justify-end">
+            {children}
+        </div>
+    );
+};
+
