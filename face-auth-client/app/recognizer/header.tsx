@@ -13,3 +13,13 @@ const HeaderContainer = ({ children }) => {
     );
 };
 
+
+// ヘッダー上部
+const TopHeader = ({ children }) => {
+    return (
+        <div className="bg-foreground h-[60px] w-full flex items-center justify-between">
+            {children}
+        </div>
+    );
+};
+
