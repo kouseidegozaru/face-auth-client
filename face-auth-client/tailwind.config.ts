@@ -13,14 +13,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "rgb(246, 248, 250)",
+        background: "rgb(244, 244, 244)",
         foreground: "rgb(255, 255, 255)",
         foreground_hover: "rgb(245, 245, 245)",
         text : "rgb(25, 25, 25)",
         subtext : "rgb(136, 136, 136)",
         line : "rgb(209, 217, 224)",
         primary1 : "rgb(9, 105, 218)",
-        primary1_hover : "rgb(7, 93, 201)",
+        primary1_hover : "rgb(6, 80, 190)",
         primary2 : "rgb(227, 148, 0)",
         primary2_hover : "rgb(217, 133, 0)",
         apply : "rgb(31, 136, 61)",
