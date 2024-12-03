@@ -115,4 +115,20 @@ function TreeItem({ group }: { group: Group }) {
   );
 }
 
+function SidebarFooter({ children }: { children: React.ReactNode }) {
+    return (
+        <div className="h-auto w-full bg-foreground">
+            {children}
+        </div>
+    );
+}
+
+function SidebarFooterHead() {
+    return (
+        <div className="h-[25px] w-full flex items-left border-line border-b-2">
+            <p className="ml-2 text-1xl text-subtext">User</p>
+        </div>
+    );
+}
+
 
