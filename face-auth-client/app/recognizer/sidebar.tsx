@@ -12,4 +12,26 @@ function SidebarContainer({ children }: { children: React.ReactNode }) {
     );
 }
 
+function SidebarHeader({ children }: { children: React.ReactNode }) {
+    return (
+        <div className="bg-foreground h-[50px] w-full flex items-center justify-between">
+            {children}
+        </div>
+    );
+}
+
+function SidebarTitle() {
+    return (
+        <div className="ml-2 text-1xl font-bold">
+            学習グループ
+        </div>
+    );
+}
+
+function AddGroup() {
+    return (
+        <AddGroupIcon className="w-6 h-6 fill-none mr-4 stroke-primary1 hover:stroke-primary1_hover hover:fill-background stroke-2 cursor-pointer" />
+    );
+}
+
 
