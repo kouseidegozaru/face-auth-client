@@ -42,4 +42,12 @@ function SidebarContent({ children }: { children: React.ReactNode }) {
     );
 }
 
+function SidebarContentHead() {
+    return (
+        <div className="h-[25px] w-full flex items-left border-line border-b-2">
+            <p className="ml-2 text-1xl text-subtext">Group</p>
+        </div>
+    );
+}
+
 
