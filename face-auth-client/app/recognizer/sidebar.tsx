@@ -131,4 +131,13 @@ function SidebarFooterHead() {
     );
 }
 
+function LogoutContent() {
+    /* TODO: ログアウト処理 */
+    return (
+        <div className="w-full h-[50px] flex items-center justify-center">
+            <Button className="border-cancel border-2 text-cancel text-sm height-[30px]" onClick={() => {}}>Logout</Button>
+        </div>
+    );
+}
+
 
