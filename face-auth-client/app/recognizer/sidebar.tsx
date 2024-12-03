@@ -50,4 +50,13 @@ function SidebarContentHead() {
     );
 }
 
+type Group = {
+    groupID: string;
+    groupName: string;
+    groupDataLabels: Array<{ id: string; label: string}>;
+}
+type Groups = {
+    groups: Array<Group>;
+};
+
 
