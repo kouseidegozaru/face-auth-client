@@ -34,4 +34,12 @@ function AddGroup() {
     );
 }
 
+function SidebarContent({ children }: { children: React.ReactNode }) {
+    return (
+        <div className="w-full flex-1 overflow-y-scroll">
+            {children}
+        </div>
+    );
+}
+
 
