@@ -7,6 +7,25 @@ import { Button } from "../components/buttons";
 // テスト用グループのインポート
 import { TestGroup } from "./testData";
 
+export default function Sidebar() {
+    return (
+        <SidebarContainer>
+            <SidebarHeader>
+                <SidebarTitle />
+                <AddGroup />
+            </SidebarHeader>
+            <SidebarContent>
+                <SidebarContentHead />
+                <SidebarItems groups={TestGroup} />{/* TODO: データベースから取得 */}
+            </SidebarContent>
+            <SidebarFooter>
+                <SidebarFooterHead />
+                <LogoutContent />
+            </SidebarFooter>
+        </SidebarContainer>
+    );
+}
+
 function SidebarContainer({ children }: { children: React.ReactNode }) {
     return (
         <div className="w-[200px] h-full bg-foreground border-r-2 border-line flex flex-col z-[99]">
