@@ -2,7 +2,7 @@
 
 import TitleIcon from "../../public/User check.svg"
 import UserIcon from "../../public/User.svg"
-import {Button} from "../components/buttons"
+import {Button} from "../_components/buttons"
 
 
 const HeaderContainer = ({ children }) => {
