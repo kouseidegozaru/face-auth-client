@@ -60,3 +60,19 @@ const HeaderPadding = () => {
     );
 }
 
+export default function Header() {
+    return (
+        <>
+            <HeaderContainer>
+                <HeaderContent>
+                    <Title />
+                    <ButtonContainer>
+                        <LoginButton />
+                        <RegisterButton />
+                    </ButtonContainer>
+                </HeaderContent>
+            </HeaderContainer>
+            <HeaderPadding />
+        </>
+    );
+}
