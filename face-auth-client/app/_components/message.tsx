@@ -16,3 +16,15 @@ const MessageContainer = ({ children }: { children: React.ReactNode }) => {
         </div>
     );
 };
+
+const MessageHeader = ({ closeButtonEvent }: { closeButtonEvent: () => void }) => {
+    return (
+        <div className="w-full h-[40px] flex items-center justify-between border-line border-b-2">
+            <MessageIcon className="w-6 h-5 fill-none ml-4 stroke-primary2 stroke-2" />
+            <CloseIcon
+                className="w-4 h-4 fill-none mr-4 stroke-subtext stroke-2 cursor-pointer hover:stroke-line select-none"
+                onClick={closeButtonEvent}
+            />
+        </div>
+    );
+};
