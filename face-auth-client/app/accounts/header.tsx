@@ -53,3 +53,10 @@ const RegisterButton = () => {
     );
 }
 
+// Headerの後ろの空白部分
+const HeaderPadding = () => {
+    return (
+        <div className="h-[60px]" />
+    );
+}
+
