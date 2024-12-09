@@ -10,3 +10,12 @@ const HeaderContainer = ({ children }) => {
     );
 };
 
+
+const HeaderContent = ({ children }) => {
+    return (
+        <div className="bg-foreground h-full w-full flex items-center justify-between">
+            {children}
+        </div>
+    );
+};
+
