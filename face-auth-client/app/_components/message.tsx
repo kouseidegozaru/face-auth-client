@@ -28,3 +28,12 @@ const MessageHeader = ({ closeButtonEvent }: { closeButtonEvent: () => void }) =
         </div>
     );
 };
+
+const MessageBody = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <div className="flex-1 w-full overflow-y-auto text-center">
+            {children}
+        </div>
+    );
+};
+
