@@ -37,3 +37,13 @@ const MessageBody = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
+export const Message = ({ children , closeButtonEvent }: { children: React.ReactNode , closeButtonEvent: () => void }) => {
+    return (
+        <BackGround>
+            <MessageContainer>
+                <MessageHeader closeButtonEvent={closeButtonEvent} />
+                <MessageBody>{children}</MessageBody>
+            </MessageContainer>
+        </BackGround>
+    );
+}
