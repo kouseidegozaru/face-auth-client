@@ -1,3 +1,4 @@
+import React from "react";
 import MessageIcon from "../../public/Message.svg";
 import CloseIcon from "../../public/Close.svg";
 
@@ -46,4 +47,14 @@ export const Message = ({ children , closeButtonEvent }: { children: React.React
             </MessageContainer>
         </BackGround>
     );
+}
+
+
+/**
+ * isOpenがtureの場合のみchildrenを描画する.
+ * @param {{ children: React.ReactNode, isOpen: boolean }} props
+ * @returns {JSX.Element | null}
+ */
+export const OpenChildren = ({ children, isOpen }: { children: React.ReactNode, isOpen: boolean }) => {
+    return isOpen ? <>{children}</> : null;
 }
