@@ -27,3 +27,11 @@ const Title = () => {
         </div>
     );
 }
+
+const ButtonContainer = ({ children }) => {
+    return (
+        <div className="w-[200px] flex items-center justify-evenly mr-4">
+            {children}
+        </div>
+    );
+}
