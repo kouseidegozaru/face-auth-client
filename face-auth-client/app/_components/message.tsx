@@ -8,3 +8,11 @@ const BackGround = ({ children }: { children: React.ReactNode }) => {
         </div>
     );
 };
+
+const MessageContainer = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <div className="w-[600px] h-[400px] bg-foreground rounded-[20px] flex flex-col">
+            {children}
+        </div>
+    );
+};
