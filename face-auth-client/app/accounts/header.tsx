@@ -1,5 +1,6 @@
 import TitleIcon from "../../public/User check.svg"
 import {Button} from "../_components/buttons"
+import { LoginLink } from "../_links/accounts";
 
 
 const HeaderContainer = ({ children }) => {
@@ -35,3 +36,12 @@ const ButtonContainer = ({ children }) => {
         </div>
     );
 }
+
+const LoginButton = () => {
+    return (
+        <LoginLink>
+            <Button className="w-[85px] border-primary2 border-2 text-primary2">ログイン</Button>
+        </LoginLink>
+    );
+}
+
