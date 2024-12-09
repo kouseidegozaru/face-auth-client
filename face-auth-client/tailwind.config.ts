@@ -29,6 +29,7 @@ export default {
         cancel_hover : "rgb(199, 32, 43)",
         error : "rgb(209, 36, 47)",
         header : "rgb(24, 150, 159)",
+        msg_background : "rgb(106, 106, 106)",
       },
       fontFamily: {
         title: ["TiltWarp", ...defaultTheme.fontFamily.sans],
