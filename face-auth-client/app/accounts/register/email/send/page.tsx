@@ -1,5 +1,17 @@
 import { RegisterEmailResendLink } from '../../../../_links/accounts';
 
+export default function Page() {
+    return (
+        <>
+            <Header />
+            <ContentContainer>
+                <SendMessage />
+                <ResendMessage />
+            </ContentContainer>
+        </>
+    );
+}
+
 const Header = () => {
     return (
         <div className="bg-foreground h-[50px] w-full border-b border-line flex items-center">
