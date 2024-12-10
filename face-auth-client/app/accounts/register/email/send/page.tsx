@@ -8,6 +8,14 @@ const Header = () => {
     );
 }
 
+const ContentContainer = ({ children }) => {
+    return (
+        <div className="w-full h-[450px] bg-foreground flex flex-col items-center justify-center font-bold">
+            {children}
+        </div>
+    );
+}
+
 const SendMessage = () => {
     return (
         <div className="w-full h-auto flex flex-col items-center justify-center my-2">
