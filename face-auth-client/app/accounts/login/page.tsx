@@ -12,6 +12,72 @@ const Header = () => {
     );
 }
 
+const ContentContainer = () => {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [errors, setErrors] : any = useState({})
+
+    // バリデーション
+    const validate = (field, value) => {
+        const newErrors : any = { ...errors }
+
+        // フィールドごとのバリデーション
+        switch (field) {
+            case "email":
+                if (!value) {
+                    newErrors.email = "メールアドレスを入力してください"
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    newErrors.email = "有効なメールアドレスを入力してください"
+                } else {
+                    delete newErrors.email
+                }
+                break
+            case "password":
+                if (!value) {
+                    newErrors.password = "パスワードを入力してください"
+                } else {
+                    delete newErrors.password
+                }
+                break
+            default:
+                break
+        }
+
+        setErrors(newErrors)
+    }
+
+    return (
+        <div className="w-full h-[calc(100%-50px)] flex flex-col items-center justify-center">
+            <div className="w-full h-[77%] flex flex-col items-center justify-evenly">
+                <CustomInput 
+                    label="メールアドレス" 
+                    inputValue={email} 
+                    setInputValue={(value) => { setEmail(value); validate("email", value) }} 
+                    errorMessage={errors.email} 
+                />
+                <CustomInput 
+                    label="パスワード" 
+                    inputValue={password} 
+                    setInputValue={(value) => { setPassword(value); validate("password", value) }} 
+                    errorMessage={errors.password} 
+                />
+                <Button 
+                    className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
+                    onClick={() => {
+                        if (Object.keys(errors).length === 0 && email && password) {
+                            // TODO: ログイン処理
+                        } else {
+                            alert("正しい情報を入力してください")
+                        }
+                    }}
+                >
+                    完了
+                </Button>
+            </div>
+        </div>
+    );
+}
+
 const CustomInput = ({ label, inputValue, setInputValue, errorMessage }) => {
     const onChange = (e) => {
         setInputValue(e.target.value)
