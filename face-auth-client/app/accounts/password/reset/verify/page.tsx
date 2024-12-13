@@ -25,3 +25,14 @@ const ConfirmMessage = () => {
     );
 }
 
+const LoginMessage = () => {
+    return (
+        <div className="w-full h-auto flex items-center justify-center my-2 text-[12px]">
+            <p>ログインは</p>
+            <LoginLink>
+                <p className="text-primary1 hover:text-primary1_hover">こちら</p>
+            </LoginLink>
+            <p>から</p>
+        </div>
+    );
+}
