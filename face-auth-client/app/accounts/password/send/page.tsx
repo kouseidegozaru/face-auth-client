@@ -25,3 +25,16 @@ const SendMessage = () => {
     );
 }
 
+const ResendMessage = () => {
+    return (
+        <div className="w-full h-auto flex flex-col items-center justify-center my-2">
+            <p className="text-[12px]">メールが届かない場合は</p>
+            <div className="text-[12px] flex">
+                <PasswordResetLink>
+                    <p className="text-primary1 hover:text-primary1_hover">こちら</p>
+                </PasswordResetLink>
+                から再送信してください
+            </div>
+        </div>
+    );
+}
