@@ -1,5 +1,16 @@
 import { LoginLink } from '../../../../_links/accounts';
 
+export default function Page() {
+    return (
+        <>
+            <Header />
+            <ContentContainer>
+                <ConfirmMessage />
+                <LoginMessage />
+            </ContentContainer>
+        </>
+    );
+}
 
 const Header = () => {
     return (
