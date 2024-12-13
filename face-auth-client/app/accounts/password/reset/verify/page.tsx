@@ -9,3 +9,11 @@ const Header = () => {
     );
 }
 
+const ContentContainer = ({ children }) => {
+    return (
+        <div className="w-full h-[450px] bg-foreground flex flex-col items-center justify-center font-bold">
+            {children}
+        </div>
+    );
+}
+
