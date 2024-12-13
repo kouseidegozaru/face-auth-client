@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import { Button } from "../../../_components/buttons"
+import { Button } from "../../../../_components/buttons"
 
 export default function Page() {
     return (
