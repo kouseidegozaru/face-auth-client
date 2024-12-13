@@ -3,6 +3,15 @@
 import { useState } from "react"
 import { Button } from "../../../_components/buttons"
 
+export default function Page() {
+    return (
+        <>
+            <Header />
+            <ContentContainer />
+        </>
+    );
+}
+
 const Header = () => {
     return (
         <div className="bg-foreground h-[50px] w-full border-b border-line flex items-center">
