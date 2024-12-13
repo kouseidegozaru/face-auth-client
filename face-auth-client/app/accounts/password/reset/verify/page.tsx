@@ -17,3 +17,11 @@ const ContentContainer = ({ children }) => {
     );
 }
 
+const ConfirmMessage = () => {
+    return (
+        <div className="w-full h-auto flex flex-col items-center justify-center my-2">
+            <p className="text-sm">パスワードの変更が完了しました</p>
+        </div>
+    );
+}
+
