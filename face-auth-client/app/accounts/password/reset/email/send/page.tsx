@@ -1,4 +1,4 @@
-import { PasswordResetLink } from '../../../_links/accounts';
+import { PasswordResetLink } from '../../../../../_links/accounts';
 
 export default function Page() {
     return (
