@@ -16,3 +16,12 @@ const ContentContainer = ({ children }) => {
     );
 }
 
+const SendMessage = () => {
+    return (
+        <div className="w-full h-auto flex flex-col items-center justify-center my-2">
+            <p className="text-sm">変更メールを送信しました</p>
+            <p className="text-sm">メールのURLを開きアカウントを認証してください</p>
+        </div>
+    );
+}
+
