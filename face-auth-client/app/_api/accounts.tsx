@@ -60,4 +60,9 @@ export async function verifyRegistrationEmail(token: string) {
     return requestApi('/registration/verify-email/', 'POST', { key: token });
 }
 
+// 登録メール再送
+export async function resendRegistrationEmail(email: string) {
+    return requestApi('/registration/resend-email/', 'POST', { email });
+}
+
 
