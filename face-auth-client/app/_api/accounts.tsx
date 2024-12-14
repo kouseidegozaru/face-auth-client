@@ -80,4 +80,19 @@ export async function sendPasswordResetEmail(email: string) {
     return requestApi('/password/reset/', 'POST', { email });
 }
 
+// パスワードリセット
+export async function confirmPasswordReset(
+    uid: string,
+    token: string,
+    newPassword1: string,
+    newPassword2: string
+) {
+    return requestApi('/password/reset/confirm/', 'POST', {
+        key: token,
+        uid,
+        new_password1: newPassword1,
+        new_password2: newPassword2
+    });
+}
+
 
