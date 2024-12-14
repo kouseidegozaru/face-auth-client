@@ -55,4 +55,9 @@ export async function registerUser(
     });
 }
 
+// 登録メール認証
+export async function verifyRegistrationEmail(token: string) {
+    return requestApi('/registration/verify-email/', 'POST', { key: token });
+}
+
 
