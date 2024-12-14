@@ -70,4 +70,9 @@ export async function loginUser(email: string, password: string) {
     return requestApi('/login/', 'POST', { email, password });
 }
 
+// ログアウト
+export async function logoutUser(sessionToken: string) {
+    return requestApi('/logout/', 'POST', {}, sessionToken);
+}
+
 
