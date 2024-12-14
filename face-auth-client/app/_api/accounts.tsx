@@ -75,4 +75,9 @@ export async function logoutUser(sessionToken: string) {
     return requestApi('/logout/', 'POST', {}, sessionToken);
 }
 
+// パスワードリセットメール送信
+export async function sendPasswordResetEmail(email: string) {
+    return requestApi('/password/reset/', 'POST', { email });
+}
+
 
