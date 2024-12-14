@@ -65,4 +65,9 @@ export async function resendRegistrationEmail(email: string) {
     return requestApi('/registration/resend-email/', 'POST', { email });
 }
 
+// ログイン
+export async function loginUser(email: string, password: string) {
+    return requestApi('/login/', 'POST', { email, password });
+}
+
 
