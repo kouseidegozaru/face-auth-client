@@ -95,4 +95,8 @@ export async function confirmPasswordReset(
     });
 }
 
+// ログイン中のユーザー情報取得
+export async function getUser(sessionToken: string) {
+    return requestApi('/user/', 'GET', {}, sessionToken);
+}
 
