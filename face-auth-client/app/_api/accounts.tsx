@@ -18,22 +18,21 @@ async function requestApi(endpoint: string, method: string, body: object | null,
         headers['Authorization'] = `Token ${token}`;
     }
 
+    // リクエストオブジェクト
+    const request : RequestInit = {
+        method: method,
+        headers: headers
+    }
+
+    // メソッドがPOSTの場合、bodyを追加
+    if (method === 'POST') {
+        request.body = JSON.stringify(body);
+    }
+
     try {
         // APIリクエスト
-        const response = await fetch(`${API_ROOT_URL}${endpoint}`, {
-            method,
-            headers,
-            body: body ? JSON.stringify(body) : undefined
-        });
-
-        // レスポンスチェック
-        if (!response.ok) {
-            const errorResponse = await response.json();
-            throw new Error(errorResponse.message || 'Unknown error');
-        }
-
-        const data = await response.json();
-        return data;
+        const response = await fetch(`${API_ROOT_URL}${endpoint}`, request);
+        return response
     } catch (error) {
         console.error('API request failed:', error);
         throw error;
