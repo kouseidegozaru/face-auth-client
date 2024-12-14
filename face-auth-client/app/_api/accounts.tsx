@@ -40,3 +40,19 @@ async function requestApi(endpoint: string, method: string, body: object | null,
     }
 }
 
+// ユーザー登録
+export async function registerUser(
+    username: string,
+    email: string,
+    password1: string,
+    password2: string
+) {
+    return requestApi('/registration/', 'POST', {
+        name: username,
+        email,
+        password1,
+        password2
+    });
+}
+
+
