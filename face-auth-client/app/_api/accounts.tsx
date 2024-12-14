@@ -32,15 +32,7 @@ async function requestApi(endpoint: string, method: string, body: object | null,
     try {
         // APIリクエスト
         const response = await fetch(`${API_ROOT_URL}${endpoint}`, request);
-
-        // レスポンスチェック
-        if (!response.ok) {
-            const errorResponse = await response.json();
-            throw new Error(errorResponse.message || 'Unknown error');
-        }
-
-        const data = await response.json();
-        return data;
+        return response
     } catch (error) {
         console.error('API request failed:', error);
         throw error;
