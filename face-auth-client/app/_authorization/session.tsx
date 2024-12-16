@@ -1,9 +1,12 @@
-// セッショントークンの取得
-export function getSessionToken() : string | null {
-    return localStorage.getItem('sessionToken');
+// サーバーサイドでセッショントークンを取得する関数
+'use server'
+
+import { getCookie, setCookie } from "./cookie";
+
+export async function getSessionToken() : Promise<string | null> {
+    return getCookie('sessionToken');
 }
 
-// セッショントークンの設定
-export function setSessionToken(sessionToken: string) : void {
-    localStorage.setItem('sessionToken', sessionToken);
+export async function setSessionToken(sessionToken: string) : Promise<void> {
+    return setCookie('sessionToken', sessionToken);
 }
