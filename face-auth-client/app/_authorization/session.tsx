@@ -4,9 +4,9 @@
 import { getCookie, setCookie } from "./cookie";
 
 export async function getSessionToken() : Promise<string | null> {
-    return getCookie('sessionToken');
+    return await getCookie('sessionToken');
 }
 
 export async function setSessionToken(sessionToken: string) : Promise<void> {
-    return setCookie('sessionToken', sessionToken);
+    return await setCookie('sessionToken', sessionToken);
 }
