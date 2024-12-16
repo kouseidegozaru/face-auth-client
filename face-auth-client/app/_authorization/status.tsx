@@ -1,10 +1,12 @@
-import { getUser } from "../_api/accounts"
+'use server'
+
+import { getUser } from "../_requests/accounts"
 import { getSessionToken } from "../_authorization/session"
 
 // ユーザーがログインしていてるかを確認
-export default async function IsLogin(): Promise<boolean> {
+export async function IsLogin(): Promise<boolean> {
     // セッショントークンを取得
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
     // セッショントークンがnullの場合はfalseを返す
     if (sessionToken == null) {
         return false;
