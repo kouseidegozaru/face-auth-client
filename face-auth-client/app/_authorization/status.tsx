@@ -1,4 +1,4 @@
-import { getUser } from "../_api/accounts"
+import { getUser } from "../_requests/accounts"
 import { getSessionToken } from "../_authorization/session"
 
 // ユーザーがログインしていてるかを確認
