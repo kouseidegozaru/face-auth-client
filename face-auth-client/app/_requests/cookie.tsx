@@ -42,5 +42,5 @@ export async function SetSessionToken(sessionToken: string): Promise<string | nu
 }
 
 export async function SetCsrfToken(csrfToken: string): Promise<string | null> {
-    return (await requestApi('/csrf-token/', 'POST', { csrfToken })).json();
+    return (await requestApi('/csrf/', 'POST', { csrfToken })).json();
 }
