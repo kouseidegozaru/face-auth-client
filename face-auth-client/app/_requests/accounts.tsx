@@ -99,3 +99,7 @@ export async function getUser(sessionToken: string) {
     return requestApi('/user/', 'GET', {}, sessionToken);
 }
 
+// csrfトークンの発行
+export async function getCSRFToken() {
+    return requestApi('/csrf-token/', 'GET', {});
+}
