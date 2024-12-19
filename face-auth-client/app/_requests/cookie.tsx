@@ -34,9 +34,9 @@ async function requestApi(endpoint: string, method: string, body: object | null)
 }
 
 export async function GetSessionToken(): Promise<string | null> {
-    return (await requestApi('/cookie/', 'GET', null)).json();
+    return (await requestApi('/session/', 'GET', null)).json();
 }
 
 export async function SetSessionToken(sessionToken: string): Promise<string | null> {
-    return (await requestApi('/cookie/', 'POST', { sessionToken })).json();
+    return (await requestApi('/session/', 'POST', { sessionToken })).json();
 }
