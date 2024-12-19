@@ -40,3 +40,7 @@ export async function GetSessionToken(): Promise<string | null> {
 export async function SetSessionToken(sessionToken: string): Promise<string | null> {
     return (await requestApi('/session/', 'POST', { sessionToken })).json();
 }
+
+export async function SetCsrfToken(csrfToken: string): Promise<string | null> {
+    return (await requestApi('/csrf-token/', 'POST', { csrfToken })).json();
+}
