@@ -2,6 +2,9 @@
 
 import { useState } from "react"
 import { Button } from "../../_components/buttons"
+import { registerUser } from "../../_requests/accounts"
+import { RegisterEmailSendPage } from "../../_links/accounts"
+import { useMessageModal } from "../../_components/MessageModal"
 
 export default function Page() {
     return (
@@ -26,6 +29,7 @@ const ContentContainer = () => {
     const [password1, setPassword1] = useState("")
     const [password2, setPassword2] = useState("")
     const [errors, setErrors] : any = useState({})
+    const {showModal, Modal} = useMessageModal()
 
     // バリデーション
     const validate = (field, value) => {
@@ -104,14 +108,35 @@ const ContentContainer = () => {
                 className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
                 onClick={() => {
                     if (Object.keys(errors).length === 0 && username && email && password1 && password2) {
-                        // TODO: 登録処理(ajaxで実装する)
+                        // TODO: ボタンをロード中に変更
+                        
+                        // ユーザー登録リクエストの送信
+                        try {
+                            registerUser(username, email, password1, password2).then((res) => {   
+                                if (res.ok) {
+                                    // メール送信完了メッセージへリダイレクト
+                                    RegisterEmailSendPage.Redirect()
+                                } else if (res.status === 400) {
+                                    showModal("既に登録済みです", "error")
+                                } else if (res.status === 409) {
+                                    showModal("既に送信済みです", "success")
+                                } else {
+                                    showModal("ユーザー登録に失敗しました", "error")
+                                }
+                            })
+
+                        } catch (error) {
+                            showModal("ユーザー登録に失敗しました", "error")
+                        }
+
                     } else {
-                        alert("正しい情報を入力してください")
+                        showModal("正しい情報を入力してください", "error");
                     }
                 }}
             >
                 完了
             </Button>
+            <Modal />
         </div>
     );
 }
