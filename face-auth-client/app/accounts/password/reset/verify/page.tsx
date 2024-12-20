@@ -1,4 +1,4 @@
-import { LoginLink } from '../../../../_links/accounts';
+import { LoginPage } from '../../../../_links/accounts';
 
 export default function Page() {
     return (
@@ -40,9 +40,9 @@ const LoginMessage = () => {
     return (
         <div className="w-full h-auto flex items-center justify-center my-2 text-[12px]">
             <p>ログインは</p>
-            <LoginLink>
+            <LoginPage.Link>
                 <p className="text-primary1 hover:text-primary1_hover">こちら</p>
-            </LoginLink>
+            </LoginPage.Link>
             <p>から</p>
         </div>
     );

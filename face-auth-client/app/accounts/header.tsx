@@ -1,6 +1,6 @@
 import TitleIcon from "../../public/User check.svg"
 import {Button} from "../_components/buttons"
-import { LoginLink , RegisterLink } from "../_links/accounts";
+import { LoginPage , RegisterPage } from "../_links/accounts";
 
 
 const HeaderContainer = ({ children }) => {
@@ -39,17 +39,17 @@ const ButtonContainer = ({ children }) => {
 
 const LoginButton = () => {
     return (
-        <LoginLink>
+        <LoginPage.Link>
             <Button className="w-[85px] border-primary2 border-2 text-primary2">ログイン</Button>
-        </LoginLink>
+        </LoginPage.Link>
     );
 }
 
 const RegisterButton = () => {
     return (
-        <RegisterLink>
+        <RegisterPage.Link>
             <Button className="w-[85px] border-primary2 border-2 text-primary2">新規登録</Button>
-        </RegisterLink>
+        </RegisterPage.Link>
     );
 }
 
