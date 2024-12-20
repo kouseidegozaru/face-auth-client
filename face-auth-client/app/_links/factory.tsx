@@ -1,5 +1,9 @@
 import Link from 'next/link';
 
+type GeneratedPath = {
+    Link : React.FC<{ children: React.ReactNode }>,
+    Redirect : () => void
+}
 
 /**
  * Linkコンポーネントを生成する高階関数
@@ -7,8 +11,8 @@ import Link from 'next/link';
  * @param {string} path - The path to link to.
  * @returns {React.FC<{ children: React.ReactNode }>} - A function component
  */
-const FactoryLink = (path: string): React.FC<{ children: React.ReactNode }> => {
-
+const FactoryPath = (path: string): GeneratedPath => {
+    
     if (!path) {
         path = '/'
     }
@@ -23,7 +27,11 @@ const FactoryLink = (path: string): React.FC<{ children: React.ReactNode }> => {
         return <Link href={`${path}`}>{children}</Link>;
     };
 
-    return GeneratedLink;
+    const GeneratedRouter = (): void => {
+        window.location.href = path
+    }
+
+    return { Link: GeneratedLink, Redirect: GeneratedRouter };
 };
 
-export default FactoryLink
+export default FactoryPath

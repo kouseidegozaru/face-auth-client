@@ -1,5 +1,5 @@
-import FactoryLink from './factory';
+import FactoryPath from './factory';
 
 const ROOT_PATH = '/recognizer';
 
-export const GroupLink = FactoryLink(`${ROOT_PATH}/groups`);
+export const GroupPage = FactoryPath(`${ROOT_PATH}/groups`);
