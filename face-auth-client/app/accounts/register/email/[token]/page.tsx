@@ -3,9 +3,11 @@
 import { verifyRegistrationEmail } from '../../../../_requests/accounts'
 import React, { useState, useEffect } from 'react'
 import { LoginPage , RegisterPage } from '@/app/_links/accounts';
+import Loading from '@/app/_components/loading'
 
 const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     const [isSuccessLogin, setIsSuccessLogin] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const { token } = React.use(params);
     useEffect(() => {
         const verifyEmail = async () => {
@@ -18,6 +20,8 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
             }
           } catch (error) {
             setIsSuccessLogin(false);
+          } finally {
+            setIsLoading(false);
           }
         };
     
@@ -28,26 +32,30 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
         <>
             <Header />
             <ContentContainer>
-                {isSuccessLogin ? (
-                    <div className="text-center">
-                        <p className="text-sm">登録が完了しました</p>
-                        <div className='flex text-[14px]'>
-                            <LoginPage.Link>
-                                <p className="text-primary1 hover:text-primary1_hover">こちら</p>
-                            </LoginPage.Link>
-                            <p>からログインしてください</p>
-                        </div>
-                    </div>
+                {isLoading ? (
+                    <Loading disabled={false}/>
                 ) : (
-                    <div className="text-center">
-                        <p className="text-sm">登録に失敗しました</p>
-                        <div className='flex text-[14px]'>
-                            <RegisterPage.Link>
-                                <p className="text-primary1 hover:text-primary1_hover">こちら</p>
-                            </RegisterPage.Link>
-                            <p>から再度登録してください</p>
+                    isSuccessLogin ? (
+                        <div className="text-center">
+                            <p className="text-sm">登録が完了しました</p>
+                            <div className='flex text-[14px]'>
+                                <LoginPage.Link>
+                                    <p className="text-primary1 hover:text-primary1_hover">こちら</p>
+                                </LoginPage.Link>
+                                <p>からログインしてください</p>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="text-center">
+                            <p className="text-sm">登録に失敗しました</p>
+                            <div className='flex text-[14px]'>
+                                <RegisterPage.Link>
+                                    <p className="text-primary1 hover:text-primary1_hover">こちら</p>
+                                </RegisterPage.Link>
+                                <p>から再度登録してください</p>
+                            </div>
+                        </div>
+                    )
                 )}
             </ContentContainer>
         </>
