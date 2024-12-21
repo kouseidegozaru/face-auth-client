@@ -5,6 +5,7 @@ import { Button } from "../../_components/buttons"
 import { registerUser } from "../../_requests/accounts"
 import { RegisterEmailSendPage } from "../../_links/accounts"
 import { useMessageModal } from "../../_components/MessageModal"
+import Loading from "../../_components/loading"
 
 export default function Page() {
     return (
@@ -29,6 +30,7 @@ const ContentContainer = () => {
     const [password1, setPassword1] = useState("")
     const [password2, setPassword2] = useState("")
     const [errors, setErrors] : any = useState({})
+    const [loading, setLoading] = useState(false)
     const {showModal, Modal} = useMessageModal()
 
     // バリデーション
@@ -104,38 +106,45 @@ const ContentContainer = () => {
                 setInputValue={(value) => { setPassword2(value); validate("password2", value) }} 
                 errorMessage={errors.password2} 
             />
-            <Button 
-                className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                onClick={() => {
-                    if (Object.keys(errors).length === 0 && username && email && password1 && password2) {
-                        // TODO: ボタンをロード中に変更
-                        
-                        // ユーザー登録リクエストの送信
-                        try {
-                            registerUser(username, email, password1, password2).then((res) => {   
-                                if (res.ok) {
-                                    // メール送信完了メッセージへリダイレクト
-                                    RegisterEmailSendPage.Redirect()
-                                } else if (res.status === 400) {
-                                    showModal("既に登録済みです", "error")
-                                } else if (res.status === 409) {
-                                    showModal("既に送信済みです", "success")
-                                } else {
-                                    showModal("ユーザー登録に失敗しました", "error")
-                                }
-                            })
+            {!loading &&
+                <Button 
+                    className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
+                    onClick={async () => {
+                        if (Object.keys(errors).length === 0 && username && email && password1 && password2) {
+                            // ボタンをロード中に変更
+                            setLoading(true)
+                            
+                            // ユーザー登録リクエストの送信
+                            try {
+                                await registerUser(username, email, password1, password2).then((res) => {   
+                                    if (res.ok) {
+                                        // メール送信完了メッセージへリダイレクト
+                                        RegisterEmailSendPage.Redirect()
+                                    } else if (res.status === 400) {
+                                        showModal("既に登録済みです", "error")
+                                    } else if (res.status === 409) {
+                                        showModal("既に送信済みです", "success")
+                                    } else {
+                                        showModal("ユーザー登録に失敗しました", "error")
+                                    }
+                                })
 
-                        } catch (error) {
-                            showModal("ユーザー登録に失敗しました", "error")
+                            } catch (error) {
+                                showModal("ユーザー登録に失敗しました", "error")
+                            } finally {
+                                // ボタンをロード中から通常に戻す
+                                setLoading(false)
+                            }
+
+                        } else {
+                            showModal("正しい情報を入力してください", "error");
                         }
-
-                    } else {
-                        showModal("正しい情報を入力してください", "error");
-                    }
-                }}
-            >
-                完了
-            </Button>
+                    }}
+                >
+                    完了
+                </Button>
+            }
+            <Loading disabled={!loading}/>
             <Modal />
         </div>
     );
