@@ -1,19 +1,20 @@
 import { verifyRegistrationEmail } from '../../../../_requests/accounts'
 import React, { useState, useEffect } from 'react'
 
-const Page = ({ params }) => {
+const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     const [isSuccessLogin, setIsSuccessLogin] = useState(false);
+    const { token } = React.use(params);
     try {
         useEffect(() => {
             // メール認証リクエスト
-            verifyRegistrationEmail(params.token).then((res) => {
+            verifyRegistrationEmail(token).then((res) => {
                 if (res.status === 200) {
                     setIsSuccessLogin(true);
                 } else {
                     setIsSuccessLogin(false);
                 }
             });
-        }, [params.token]);
+        }, [token]);
     } finally {
         setIsSuccessLogin(false);
     }
