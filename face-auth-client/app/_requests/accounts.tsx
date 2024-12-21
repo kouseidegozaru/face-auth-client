@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.API_BASE_URL
 const API_ROOT_URL = `${API_BASE_URL}/users`
 
 // APIリクエストを行う共通の関数
-async function requestApi(endpoint: string, method: string, body: object | null, token: string | null = null): Promise<any> {
+async function requestApi(endpoint: string, method: string, body: object | null, token: string | null = null): Promise<Response> {
     
     // リクエストヘッダー
     const headers: Record<string, string> = {
