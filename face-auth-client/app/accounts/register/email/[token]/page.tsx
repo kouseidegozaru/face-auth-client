@@ -2,22 +2,23 @@
 
 import { verifyRegistrationEmail } from '../../../../_requests/accounts'
 import React, { useState, useEffect } from 'react'
+import { LoginPage , RegisterPage } from '@/app/_links/accounts';
 
 const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     const [isSuccessLogin, setIsSuccessLogin] = useState(false);
     const { token } = React.use(params);
     useEffect(() => {
         const verifyEmail = async () => {
-    try {
+          try {
             const res = await verifyRegistrationEmail(token);
-                if (res.status === 200) {
-                    setIsSuccessLogin(true);
-                } else {
-                    setIsSuccessLogin(false);
-                }
+            if (res.status === 200) {
+              setIsSuccessLogin(true);
+            } else {
+              setIsSuccessLogin(false);
+            }
           } catch (error) {
-        setIsSuccessLogin(false);
-    }
+            setIsSuccessLogin(false);
+          }
         };
     
         verifyEmail();
@@ -28,12 +29,24 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
             <Header />
             <ContentContainer>
                 {isSuccessLogin ? (
-                    <div>
-                        <h1>登録が完了しました</h1>
+                    <div className="text-center">
+                        <p className="text-sm">登録が完了しました</p>
+                        <div className='flex text-[14px]'>
+                            <LoginPage.Link>
+                                <p className="text-primary1 hover:text-primary1_hover">こちら</p>
+                            </LoginPage.Link>
+                            <p>からログインしてください</p>
+                        </div>
                     </div>
                 ) : (
-                    <div>
-                        <h1>登録に失敗しました</h1>
+                    <div className="text-center">
+                        <p className="text-sm">登録に失敗しました</p>
+                        <div className='flex text-[14px]'>
+                            <RegisterPage.Link>
+                                <p className="text-primary1 hover:text-primary1_hover">こちら</p>
+                            </RegisterPage.Link>
+                            <p>から再度登録してください</p>
+                        </div>
                     </div>
                 )}
             </ContentContainer>
