@@ -6,6 +6,7 @@ import { loginUser } from "../../_requests/accounts"
 import { useMessageModal } from "../../_components/MessageModal"
 import { GroupPage } from "../../_links/recognizer"
 import Loading from "../../_components/loading"
+import { SetSessionToken } from "../../_requests/cookie"
 
 export default function Page() {
     return (
@@ -84,8 +85,12 @@ const ContentContainer = () => {
                                 setLoading(true)
                                 try {
                                     // ログイン処理
-                                    await loginUser(email, password).then((res) => {
+                                    await loginUser(email, password).then(async (res) => {
                                         if (res.ok) {
+                                            // データの取得
+                                            const data = await res.json()
+                                            // セッショントークンをセット
+                                            await SetSessionToken(data.key)
                                             // グループページへ遷移
                                             GroupPage.Redirect()
                                         } else if (res.status === 400) {
