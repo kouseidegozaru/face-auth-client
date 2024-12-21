@@ -2,6 +2,9 @@
 
 import { useState } from "react"
 import { Button } from "../../_components/buttons"
+import { loginUser } from "../../_requests/accounts"
+import { useMessageModal } from "../../_components/MessageModal"
+import { GroupPage } from "../../_links/recognizer"
 
 export default function Page() {
     return (
@@ -24,6 +27,7 @@ const ContentContainer = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errors, setErrors] : any = useState({})
+    const { showModal , Modal } = useMessageModal()
 
     // バリデーション
     const validate = (field, value) => {
@@ -71,17 +75,34 @@ const ContentContainer = () => {
                 />
                 <Button 
                     className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                    onClick={() => {
+                    onClick={async () => {
                         if (Object.keys(errors).length === 0 && email && password) {
-                            // TODO: ログイン処理
-                        } else {
-                            alert("正しい情報を入力してください")
+                        try {
+                            // ログイン処理
+                            await loginUser(email, password).then((res) => {
+                                if (res.ok) {
+                                    // グループページへ遷移
+                                    GroupPage.Redirect()
+                                } else if (res.status === 400) {
+                                    showModal("メールアドレスまたはパスワードが違います", "error")
+                                } else {
+                                    showModal("ログインに失敗しました", "error")
+                                }
+                            })
+
+                        } catch (error) {
+                            showModal("ログインに失敗しました", "error")
                         }
-                    }}
-                >
-                    完了
-                </Button>
+
+                    } else {
+                        showModal("正しい情報を入力してください", "error");
+                    }
+                }}
+            >
+                完了
+            </Button>
             </div>
+            <Modal />
         </div>
     );
 }
