@@ -1,23 +1,27 @@
+"use client"
+
 import { verifyRegistrationEmail } from '../../../../_requests/accounts'
 import React, { useState, useEffect } from 'react'
 
 const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     const [isSuccessLogin, setIsSuccessLogin] = useState(false);
     const { token } = React.use(params);
+    useEffect(() => {
+        const verifyEmail = async () => {
     try {
-        useEffect(() => {
-            // メール認証リクエスト
-            verifyRegistrationEmail(token).then((res) => {
+            const res = await verifyRegistrationEmail(token);
                 if (res.status === 200) {
                     setIsSuccessLogin(true);
                 } else {
                     setIsSuccessLogin(false);
                 }
-            });
-        }, [token]);
-    } finally {
+          } catch (error) {
         setIsSuccessLogin(false);
     }
+        };
+    
+        verifyEmail();
+      }, [token]);
 
     return (
         <>
