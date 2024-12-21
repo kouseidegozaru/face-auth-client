@@ -2,6 +2,9 @@
 
 import { useState } from "react"
 import { Button } from "../../../../_components/buttons"
+import { resendRegistrationEmail } from "../../../../_requests/accounts"
+import { useMessageModal } from "../../../../_components/MessageModal"
+
 
 export default function Page() {
     return (
@@ -23,6 +26,7 @@ const Header = () => {
 const ContentContainer = () => {
     const [email, setEmail] = useState("")
     const [errors, setErrors] : any = useState({})
+    const { showModal , Modal } = useMessageModal()
 
     // バリデーション
     const validate = (field, value) => {
@@ -58,17 +62,34 @@ const ContentContainer = () => {
                 />
                 <Button 
                     className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                    onClick={() => {
+                    onClick={async () => {
                         if (Object.keys(errors).length === 0 && email) {
-                            // TODO: メール送信(Ajax)
+                            try {
+                                // メール再送信
+                                await resendRegistrationEmail(email).then((res) => {
+                                    if (res.ok) {
+                                        // メール再送信完了メッセージ
+                                        showModal("メールを送信しました", "success")
+                                    } else if (res.status === 400) {
+                                        showModal("メールアドレスが登録されていません", "error")
+                                    } else {
+                                        showModal("ユーザー登録に失敗しました", "error")
+                                    }
+                                })
+
+                            } catch (error) {
+                                showModal("ユーザー登録に失敗しました", "error")
+                            }
+
                         } else {
-                            alert("正しい情報を入力してください")
+                            showModal("正しい情報を入力してください", "error");
                         }
                     }}
                 >
                     完了
                 </Button>
             </div>
+            <Modal />
         </div>
     );
 }
