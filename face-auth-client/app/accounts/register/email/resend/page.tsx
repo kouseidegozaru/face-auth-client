@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "../../../../_components/buttons"
 import { resendRegistrationEmail } from "../../../../_requests/accounts"
 import { useMessageModal } from "../../../../_components/MessageModal"
+import Loading from "../../../../_components/loading"
 
 
 export default function Page() {
@@ -27,6 +28,7 @@ const ContentContainer = () => {
     const [email, setEmail] = useState("")
     const [errors, setErrors] : any = useState({})
     const { showModal , Modal } = useMessageModal()
+    const [loading, setLoading] = useState(false)
 
     // バリデーション
     const validate = (field, value) => {
@@ -60,34 +62,42 @@ const ContentContainer = () => {
                     setInputValue={(value) => { setEmail(value); validate("email", value) }} 
                     errorMessage={errors.email} 
                 />
-                <Button 
-                    className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                    onClick={async () => {
-                        if (Object.keys(errors).length === 0 && email) {
-                            try {
-                                // メール再送信
-                                await resendRegistrationEmail(email).then((res) => {
-                                    if (res.ok) {
-                                        // メール再送信完了メッセージ
-                                        showModal("メールを送信しました", "success")
-                                    } else if (res.status === 400) {
-                                        showModal("メールアドレスが登録されていません", "error")
-                                    } else {
-                                        showModal("ユーザー登録に失敗しました", "error")
-                                    }
-                                })
+                {!loading &&
+                    <Button 
+                        className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
+                        onClick={async () => {
+                            if (Object.keys(errors).length === 0 && email) {
+                                // ローディング表示
+                                setLoading(true)
+                                try {
+                                    // メール再送信
+                                    await resendRegistrationEmail(email).then((res) => {
+                                        if (res.ok) {
+                                            // メール再送信完了メッセージ
+                                            showModal("メールを送信しました", "success")
+                                        } else if (res.status === 400) {
+                                            showModal("メールアドレスが登録されていません", "error")
+                                        } else {
+                                            showModal("ユーザー登録に失敗しました", "error")
+                                        }
+                                    })
 
-                            } catch (error) {
-                                showModal("ユーザー登録に失敗しました", "error")
+                                } catch (error) {
+                                    showModal("ユーザー登録に失敗しました", "error")
+                                } finally {
+                                    // ローディング非表示
+                                    setLoading(false)
+                                }
+
+                            } else {
+                                showModal("正しい情報を入力してください", "error");
                             }
-
-                        } else {
-                            showModal("正しい情報を入力してください", "error");
-                        }
-                    }}
-                >
-                    完了
-                </Button>
+                        }}
+                    >
+                        完了
+                    </Button>
+                }
+                <Loading disabled={!loading}/>
             </div>
             <Modal />
         </div>
