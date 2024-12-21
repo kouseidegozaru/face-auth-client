@@ -20,7 +20,36 @@ const Page = ({ params }) => {
 
     return (
         <>
+            <Header />
+            <ContentContainer>
+                {isSuccessLogin ? (
+                    <div>
+                        <h1>登録が完了しました</h1>
+                    </div>
+                ) : (
+                    <div>
+                        <h1>登録に失敗しました</h1>
+                    </div>
+                )}
+            </ContentContainer>
         </>
     );
 };
+
+const Header = () => {
+    return (
+        <div className="bg-foreground h-[50px] w-full border-b border-line flex items-center">
+            <h4 className="ml-[30px] font-bold">メール送信</h4>
+        </div>
+    );
+}
+
+const ContentContainer = ({ children }) => {
+    return (
+        <div className="w-full h-[450px] bg-foreground flex flex-col items-center justify-center font-bold">
+            {children}
+        </div>
+    );
+}
+
 export default Page;
