@@ -5,6 +5,7 @@ import { Button } from "../../_components/buttons"
 import { loginUser } from "../../_requests/accounts"
 import { useMessageModal } from "../../_components/MessageModal"
 import { GroupPage } from "../../_links/recognizer"
+import Loading from "../../_components/loading"
 
 export default function Page() {
     return (
@@ -28,6 +29,7 @@ const ContentContainer = () => {
     const [password, setPassword] = useState("")
     const [errors, setErrors] : any = useState({})
     const { showModal , Modal } = useMessageModal()
+    const [loading, setLoading] = useState(false)
 
     // バリデーション
     const validate = (field, value) => {
@@ -73,34 +75,42 @@ const ContentContainer = () => {
                     setInputValue={(value) => { setPassword(value); validate("password", value) }} 
                     errorMessage={errors.password} 
                 />
-                <Button 
-                    className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                    onClick={async () => {
-                        if (Object.keys(errors).length === 0 && email && password) {
-                        try {
-                            // ログイン処理
-                            await loginUser(email, password).then((res) => {
-                                if (res.ok) {
-                                    // グループページへ遷移
-                                    GroupPage.Redirect()
-                                } else if (res.status === 400) {
-                                    showModal("メールアドレスまたはパスワードが違います", "error")
-                                } else {
+                {!loading &&
+                    <Button 
+                        className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
+                        onClick={async () => {
+                            if (Object.keys(errors).length === 0 && email && password) {
+                                // ローディング開始
+                                setLoading(true)
+                                try {
+                                    // ログイン処理
+                                    await loginUser(email, password).then((res) => {
+                                        if (res.ok) {
+                                            // グループページへ遷移
+                                            GroupPage.Redirect()
+                                        } else if (res.status === 400) {
+                                            showModal("メールアドレスまたはパスワードが違います", "error")
+                                        } else {
+                                            showModal("ログインに失敗しました", "error")
+                                        }
+                                    })
+
+                                } catch (error) {
                                     showModal("ログインに失敗しました", "error")
+                                } finally {
+                                    // ローディング終了
+                                    setLoading(false)
                                 }
-                            })
 
-                        } catch (error) {
-                            showModal("ログインに失敗しました", "error")
-                        }
-
-                    } else {
-                        showModal("正しい情報を入力してください", "error");
-                    }
-                }}
-            >
-                完了
-            </Button>
+                            } else {
+                                showModal("正しい情報を入力してください", "error");
+                            }
+                        }}
+                    >
+                        完了
+                    </Button>
+                }
+                <Loading disabled={!loading} />
             </div>
             <Modal />
         </div>
