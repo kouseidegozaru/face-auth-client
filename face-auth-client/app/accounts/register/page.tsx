@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "../../_components/buttons"
 import { registerUser } from "../../_requests/accounts"
-import { RegisterEmailSendPage } from "../../_links/accounts"
+import { RegisterEmailSendPage, RegisterEmailResendPage } from "../../_links/accounts"
 import { useMessageModal } from "../../_components/MessageModal"
 import Loading from "../../_components/loading"
 
@@ -145,6 +145,13 @@ const ContentContainer = () => {
                 </Button>
             }
             <Loading disabled={!loading}/>
+            <div className="flex">
+                <p className="text-[12px]">メールを再送信する場合は</p>
+                <RegisterEmailResendPage.Link>
+                    <p className="text-primary1 hover:text-primary1_hover text-[12px]">こちら</p>
+                </RegisterEmailResendPage.Link>
+                <p className="text-[12px]">から</p>
+            </div>
             <Modal />
         </div>
     );
