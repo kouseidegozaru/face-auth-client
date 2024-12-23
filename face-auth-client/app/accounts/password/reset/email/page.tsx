@@ -5,6 +5,7 @@ import { Button } from "../../../../_components/buttons"
 import { sendPasswordResetEmail } from "@/app/_requests/accounts"
 import { useMessageModal } from "@/app/_components/MessageModal"
 import { PasswordResetEmailSendPage } from "@/app/_links/accounts"
+import Loading from "@/app/_components/loading"
 
 export default function Page() {
     return (
@@ -27,6 +28,7 @@ const ContentContainer = () => {
     const [email, setEmail] = useState("")
     const [errors, setErrors] : any = useState({})
     const { showModal , Modal } = useMessageModal()
+    const [loading, setLoading] = useState(false)
 
     // バリデーション
     const validate = (field, value) => {
@@ -60,35 +62,43 @@ const ContentContainer = () => {
                     setInputValue={(value) => { setEmail(value); validate("email", value) }} 
                     errorMessage={errors.email} 
                 />
-                <Button 
-                    className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                    onClick={async () => {
-                        if (Object.keys(errors).length === 0 && email) {
-                            try {
-                                // メール送信
-                                await sendPasswordResetEmail(email).then((res) => {
-                                    if (res.ok){
-                                        // メール送信成功メッセージへ遷移
-                                        PasswordResetEmailSendPage.Redirect()
-                                    } else if (res.status === 400) {
-                                        // メールアドレスが登録されていない場合
-                                        showModal("メールアドレスが登録されていません", "error")
-                                    } else {
-                                        // エラー
-                                        showModal("送信に失敗しました", "error")
-                                    }
-                                })
-                            } catch {
-                                // エラー
-                                showModal("送信に失敗しました", "error")
+                {!loading &&
+                    <Button 
+                        className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
+                        onClick={async () => {
+                            if (Object.keys(errors).length === 0 && email) {
+                                // ローディング表示
+                                setLoading(true)
+                                try {
+                                    // メール送信
+                                    await sendPasswordResetEmail(email).then((res) => {
+                                        if (res.ok){
+                                            // メール送信成功メッセージへ遷移
+                                            PasswordResetEmailSendPage.Redirect()
+                                        } else if (res.status === 400) {
+                                            // メールアドレスが登録されていない場合
+                                            showModal("メールアドレスが登録されていません", "error")
+                                        } else {
+                                            // エラー
+                                            showModal("送信に失敗しました", "error")
+                                        }
+                                    })
+                                } catch {
+                                    // エラー
+                                    showModal("送信に失敗しました", "error")
+                                } finally {
+                                    // ローディング非表示
+                                    setLoading(false)
+                                }
+                            } else {
+                                showModal("正しいメールアドレスを入力してください", "error")
                             }
-                        } else {
-                            showModal("正しいメールアドレスを入力してください", "error")
-                        }
-                    }}
-                >
-                    完了
-                </Button>
+                        }}
+                    >
+                        完了
+                    </Button>
+                }
+                <Loading disabled={!loading}/>
             </div>
             <Modal />
         </div>
