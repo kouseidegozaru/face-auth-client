@@ -1,13 +1,16 @@
 'use client'
 
-import { useState } from "react"
+import React,{ useState , useEffect } from "react"
 import { Button } from "../../../../../_components/buttons"
+import { confirmPasswordReset } from "../../../../../_requests/accounts"
+import { useMessageModal } from "../../../../../_components/MessageModal"
 
-export default function Page() {
+export default function Page({ params }: { params: Promise<{ uid: string; token: string; }> }) {
+    const { uid, token } = React.use(params)
     return (
         <>
             <Header />
-            <ContentContainer />
+            <ContentContainer uid={uid} token={token}/>
         </>
     );
 }
@@ -20,9 +23,10 @@ const Header = () => {
     );
 }
 
-const ContentContainer = () => {
+const ContentContainer = ({uid, token}) => {
     const [password1, setPassword1] = useState("")
     const [password2, setPassword2] = useState("")
+    const { showModal , Modal } = useMessageModal()
     const [errors, setErrors] : any = useState({})
 
     // バリデーション
@@ -73,16 +77,29 @@ const ContentContainer = () => {
             />
             <Button 
                 className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                onClick={() => {
+                onClick={async () => {
                     if (Object.keys(errors).length === 0 && password1 && password2) {
-                        // TODO: 登録処理(ajaxで実装する)
+                        try {
+                            await confirmPasswordReset(uid, token, password1, password2).then((res) => {
+                                if (res.ok) {
+                                    // TODO:パスワード変更成功
+                                } else if (res.status === 400) {
+                                    showModal("パスワードの変更に失敗しました", "error")
+                                } else {
+                                    showModal("エラーが発生しました", "error")
+                                }
+                            })
+                        } catch {
+                            showModal("エラーが発生しました", "error")
+                        }
                     } else {
-                        alert("正しい情報を入力してください")
+                        showModal("正しい情報を入力してください", "error")
                     }
                 }}
             >
                 完了
             </Button>
+            <Modal />
         </div>
     );
 }
