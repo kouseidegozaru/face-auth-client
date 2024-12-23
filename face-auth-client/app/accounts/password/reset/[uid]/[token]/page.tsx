@@ -4,6 +4,7 @@ import React,{ useState , useEffect } from "react"
 import { Button } from "../../../../../_components/buttons"
 import { confirmPasswordReset } from "../../../../../_requests/accounts"
 import { useMessageModal } from "../../../../../_components/MessageModal"
+import { PasswordResetVerifyPage } from "@/app/_links/accounts"
 
 export default function Page({ params }: { params: Promise<{ uid: string; token: string; }> }) {
     const { uid, token } = React.use(params)
@@ -82,7 +83,8 @@ const ContentContainer = ({uid, token}) => {
                         try {
                             await confirmPasswordReset(uid, token, password1, password2).then((res) => {
                                 if (res.ok) {
-                                    // TODO:パスワード変更成功
+                                    // 完了ページへ遷移
+                                    PasswordResetVerifyPage.Redirect()
                                 } else if (res.status === 400) {
                                     showModal("パスワードの変更に失敗しました", "error")
                                 } else {

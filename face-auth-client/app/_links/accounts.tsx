@@ -9,3 +9,4 @@ export const RegisterEmailSendPage = FactoryPath(`${ROOT_PATH}/register/email/se
 export const RegisterEmailResendPage = FactoryPath(`${ROOT_PATH}/register/email/resend`);
 export const PasswordResetPage = FactoryPath(`${ROOT_PATH}/password/reset/email`);
 export const PasswordResetEmailSendPage = FactoryPath(`${ROOT_PATH}/password/reset/email/send`);
+export const PasswordResetVerifyPage = FactoryPath(`${ROOT_PATH}/password/reset/verify`);
