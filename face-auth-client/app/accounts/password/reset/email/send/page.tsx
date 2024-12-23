@@ -1,4 +1,4 @@
-import { PasswordResetLink } from '../../../../../_links/accounts';
+import { PasswordResetPage } from '../../../../../_links/accounts';
 
 export default function Page() {
     return (
@@ -42,9 +42,9 @@ const ResendMessage = () => {
         <div className="w-full h-auto flex flex-col items-center justify-center my-2">
             <p className="text-[12px]">メールが届かない場合は</p>
             <div className="text-[12px] flex">
-                <PasswordResetLink>
+                <PasswordResetPage.Link>
                     <p className="text-primary1 hover:text-primary1_hover">こちら</p>
-                </PasswordResetLink>
+                </PasswordResetPage.Link>
                 から再送信してください
             </div>
         </div>
