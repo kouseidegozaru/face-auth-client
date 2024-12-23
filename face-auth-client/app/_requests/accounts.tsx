@@ -87,7 +87,7 @@ export async function confirmPasswordReset(
     newPassword2: string
 ) {
     return requestApi('/password/reset/confirm/', 'POST', {
-        key: token,
+        token,
         uid,
         new_password1: newPassword1,
         new_password2: newPassword2
