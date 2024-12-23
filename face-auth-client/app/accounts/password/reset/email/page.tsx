@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "../../../../_components/buttons"
 import { sendPasswordResetEmail } from "@/app/_requests/accounts"
 import { useMessageModal } from "@/app/_components/MessageModal"
+import { PasswordResetEmailSendPage } from "@/app/_links/accounts"
 
 export default function Page() {
     return (
@@ -67,7 +68,8 @@ const ContentContainer = () => {
                                 // メール送信
                                 await sendPasswordResetEmail(email).then((res) => {
                                     if (res.ok){
-                                        // TODO: メール送信成功時のリダイレクト
+                                        // メール送信成功メッセージへ遷移
+                                        PasswordResetEmailSendPage.Redirect()
                                     } else if (res.status === 400) {
                                         // メールアドレスが登録されていない場合
                                         showModal("メールアドレスが登録されていません", "error")
