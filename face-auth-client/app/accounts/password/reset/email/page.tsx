@@ -76,8 +76,8 @@ const ContentContainer = () => {
                                             // メール送信成功メッセージへ遷移
                                             PasswordResetEmailSendPage.Redirect()
                                         } else if (res.status === 400) {
-                                            // メールアドレスが登録されていない場合
-                                            showModal("メールアドレスが登録されていません", "error")
+                                            // 送信失敗
+                                            showModal("正しいメールアドレスを入力してください", "error")
                                         } else {
                                             // エラー
                                             showModal("送信に失敗しました", "error")
