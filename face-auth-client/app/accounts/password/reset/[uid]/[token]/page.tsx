@@ -5,6 +5,7 @@ import { Button } from "../../../../../_components/buttons"
 import { confirmPasswordReset } from "../../../../../_requests/accounts"
 import { useMessageModal } from "../../../../../_components/MessageModal"
 import { PasswordResetVerifyPage } from "@/app/_links/accounts"
+import Loading from "@/app/_components/loading"
 
 export default function Page({ params }: { params: Promise<{ uid: string; token: string; }> }) {
     const { uid, token } = React.use(params)
@@ -29,6 +30,7 @@ const ContentContainer = ({uid, token}) => {
     const [password2, setPassword2] = useState("")
     const { showModal , Modal } = useMessageModal()
     const [errors, setErrors] : any = useState({})
+    const [loading, setLoading] = useState(false)
 
     // バリデーション
     const validate = (field, value) => {
@@ -76,31 +78,39 @@ const ContentContainer = ({uid, token}) => {
                 setInputValue={(value) => { setPassword2(value); validate("password2", value) }} 
                 errorMessage={errors.password2} 
             />
-            <Button 
-                className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
-                onClick={async () => {
-                    if (Object.keys(errors).length === 0 && password1 && password2) {
-                        try {
-                            await confirmPasswordReset(uid, token, password1, password2).then((res) => {
-                                if (res.ok) {
-                                    // 完了ページへ遷移
-                                    PasswordResetVerifyPage.Redirect()
-                                } else if (res.status === 400) {
-                                    showModal("パスワードの変更に失敗しました", "error")
-                                } else {
-                                    showModal("エラーが発生しました", "error")
-                                }
-                            })
-                        } catch {
-                            showModal("エラーが発生しました", "error")
+            {!loading &&
+                <Button 
+                    className="w-[350px] h-[50px] text-sm text-foreground bg-primary1 hover:bg-primary1_hover" 
+                    onClick={async () => {
+                        if (Object.keys(errors).length === 0 && password1 && password2) {
+                            // ロード中にする
+                            setLoading(true)
+                            try {
+                                await confirmPasswordReset(uid, token, password1, password2).then((res) => {
+                                    if (res.ok) {
+                                        // 完了ページへ遷移
+                                        PasswordResetVerifyPage.Redirect()
+                                    } else if (res.status === 400) {
+                                        showModal("パスワードの変更に失敗しました", "error")
+                                    } else {
+                                        showModal("エラーが発生しました", "error")
+                                    }
+                                })
+                            } catch {
+                                showModal("エラーが発生しました", "error")
+                            } finally {
+                                // ロード中を解除
+                                setLoading(false)
+                            }
+                        } else {
+                            showModal("正しい情報を入力してください", "error")
                         }
-                    } else {
-                        showModal("正しい情報を入力してください", "error")
-                    }
-                }}
-            >
-                完了
-            </Button>
+                    }}
+                >
+                    完了
+                </Button>
+            }
+            <Loading disabled={!loading} />
             <Modal />
         </div>
     );
