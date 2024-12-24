@@ -6,6 +6,7 @@ import { confirmPasswordReset } from "../../../../../_requests/accounts"
 import { useMessageModal } from "../../../../../_components/MessageModal"
 import { PasswordResetVerifyPage } from "@/app/_links/accounts"
 import Loading from "@/app/_components/loading"
+import { UserInput , PasswordInput } from "@/app/_components/input"
 
 export default function Page({ params }: { params: Promise<{ uid: string; token: string; }> }) {
     const { uid, token } = React.use(params)
@@ -66,13 +67,13 @@ const ContentContainer = ({uid, token}) => {
     return (
         <div className="w-full h-[calc(100%-50px)] flex flex-col items-center justify-evenly">
             <p className="text-sm font-bold m-4">新しいパスワードを入力してください</p>
-            <CustomInput 
+            <PasswordInput 
                 label="パスワード" 
                 inputValue={password1} 
                 setInputValue={(value) => { setPassword1(value); validate("password1", value) }} 
                 errorMessage={errors.password1} 
             />
-            <CustomInput 
+            <PasswordInput 
                 label="パスワード(確認用)" 
                 inputValue={password2} 
                 setInputValue={(value) => { setPassword2(value); validate("password2", value) }} 
@@ -112,26 +113,6 @@ const ContentContainer = ({uid, token}) => {
             }
             <Loading disabled={!loading} />
             <Modal />
-        </div>
-    );
-}
-
-const CustomInput = ({ label, inputValue, setInputValue, errorMessage }) => {
-    const onChange = (e) => {
-        setInputValue(e.target.value)
-    }
-    return (
-        <div className="w-[350px] h-auto bg-foreground">
-            <p className="text-[11px] text-subtext ml-2 mb-1 font-bold">{label}</p>
-            <input 
-                type="text" 
-                value={inputValue} 
-                onChange={onChange} 
-                className={`w-full h-[40px] bg-foreground rounded-[10px] border px-2 text-[14px] ${
-                    errorMessage ? "border-error" : "border-line"
-                }`} 
-            />
-            {errorMessage && <p className="text-error text-xs mt-1 ml-2">{errorMessage}</p>}
         </div>
     );
 }
