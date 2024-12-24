@@ -23,3 +23,6 @@ function InputFactory({ isPassword } : { isPassword : boolean}){
     return CustomInput
 
 }
+
+export const UserInput = InputFactory({isPassword: false})
+export const PasswordInput = InputFactory({isPassword: true})
