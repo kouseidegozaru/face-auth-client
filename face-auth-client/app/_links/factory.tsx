@@ -1,9 +1,11 @@
+'use client';
+
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 type GeneratedPath = {
-    Link: React.FC<{ children: React.ReactNode; linkKey?: string }>;
-    Redirect: ({ linkKey }: { linkKey?: string }) => void;
+    Link: React.FC<{ children: React.ReactNode; linkKey?: string | null }>;
+    Redirect: ({ linkKey }: { linkKey?: string | null }) => void;
 };
 
 /**
@@ -21,7 +23,7 @@ const FactoryPath = (path: string): GeneratedPath => {
      * @param {{ children: React.ReactNode; linkKey?: string }} props - Props to pass to the component.
      * @returns {JSX.Element} - The component.
      */
-    const GeneratedLink: React.FC<{ children: React.ReactNode; linkKey?: string }> = ({ children, linkKey }) => {
+    const GeneratedLink: React.FC<{ children: React.ReactNode; linkKey?: string | null }> = ({ children, linkKey }) => {
         const href = linkKey ? `${basePath}/${linkKey}` : basePath;
         return <Link href={href}>{children}</Link>;
     };
@@ -31,7 +33,7 @@ const FactoryPath = (path: string): GeneratedPath => {
      *
      * @param {string} linkKey - オプションのリンクキー
      */
-    const GeneratedRouter = ({ linkKey }: { linkKey?: string }): void => {
+    const GeneratedRouter = ({ linkKey }: { linkKey?: string | null }): void => {
         const router = useRouter();
         const targetPath = linkKey ? `${basePath}/${linkKey}` : basePath;
         router.push(targetPath);
