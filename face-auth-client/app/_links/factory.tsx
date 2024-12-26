@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 type GeneratedPath = {
     Link : React.FC<{ children: React.ReactNode }>,
-    Redirect : () => void
+    Redirect : ({ key }: { key?: string }) => void
 }
 
 /**
@@ -23,11 +23,17 @@ const FactoryPath = (path: string): GeneratedPath => {
      * @param {{ children: React.ReactNode }} props - Props to pass to the component.
      * @returns {JSX.Element} - The component.
      */
-    const GeneratedLink = ({ children }: { children: React.ReactNode }): JSX.Element => {
+    const GeneratedLink = ({ children , key }: { children: React.ReactNode , key?: string }): JSX.Element => {
+        if (key) {
+            return <Link href={`${path}/${key}`}>{children}</Link>;
+        }
         return <Link href={`${path}`}>{children}</Link>;
     };
 
-    const GeneratedRouter = (): void => {
+    const GeneratedRouter = ({ key }: { key?: string }): void => {
+        if (key) {
+            window.location.href = `${path}/${key}`
+        }
         window.location.href = path
     }
 
