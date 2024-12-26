@@ -95,3 +95,10 @@ export async function DeleteTrainingData(sessionToken: string, csrfToken: string
 export async function Train(sessionToken: string, csrfToken: string, groupId: number) {
     return requestApi(`/train/${groupId}/`, 'POST', null, sessionToken, csrfToken);
 }
+
+// 推論
+export async function Predict(sessionToken: string, csrfToken: string, image: File) {
+    const formData = new FormData();
+    formData.append('image', image);
+    return requestApi('/predict/', 'POST', formData, sessionToken, csrfToken);
+}
