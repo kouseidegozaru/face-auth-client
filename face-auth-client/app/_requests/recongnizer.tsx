@@ -90,3 +90,8 @@ export async function UpdateTrainingData(sessionToken: string, csrfToken: string
 export async function DeleteTrainingData(sessionToken: string, csrfToken: string, id: number) {
     return requestApi(`/training-data/${id}/`, 'DELETE', null, sessionToken, csrfToken);
 }
+
+// 学習データの学習
+export async function Train(sessionToken: string, csrfToken: string, groupId: number) {
+    return requestApi(`/train/${groupId}/`, 'POST', null, sessionToken, csrfToken);
+}
