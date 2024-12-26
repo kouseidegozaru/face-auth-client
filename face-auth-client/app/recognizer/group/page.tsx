@@ -30,3 +30,11 @@ function RegisterButton() {
     )
 }
 
+function ContentContainer({ children }: { children: React.ReactNode }) {
+    return (
+        <div className="w-full h-[calc(100%-40px)] flex flex-col justify-center bg-foreground overflow-y-hidden">
+            {children}
+        </div>
+    )
+}
+
