@@ -85,3 +85,8 @@ export async function UpdateTrainingData(sessionToken: string, csrfToken: string
     formData.append('label', label);
     return requestApi(`/training-data/${id}/`, 'PATCH', formData, sessionToken, csrfToken);
 }
+
+// 学習データの削除
+export async function DeleteTrainingData(sessionToken: string, csrfToken: string, id: number) {
+    return requestApi(`/training-data/${id}/`, 'DELETE', null, sessionToken, csrfToken);
+}
