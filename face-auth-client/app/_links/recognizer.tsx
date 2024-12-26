@@ -1,3 +1,5 @@
+'use client'
+
 import FactoryPath from './factory';
 
 const ROOT_PATH = '/recognizer';
