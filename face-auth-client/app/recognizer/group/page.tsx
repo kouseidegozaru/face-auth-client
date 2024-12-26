@@ -38,6 +38,14 @@ function ContentContainer({ children }: { children: React.ReactNode }) {
     )
 }
 
+function GroupList() {
+    return (
+        <div className="w-full h-full flex flex-col flex-0 overflow-y-auto">
+            <GroupCard group_id="group_id" group_name="group_name" updated_at="2024-01-01" />
+            <GroupCard group_id="group_id" group_name="group_name" updated_at="2024-01-01" />
+        </div>
+    )
+}
 
 function GroupCard({ group_id , group_name , updated_at }: { group_id: string, group_name: string, updated_at: string }) {
     return (
