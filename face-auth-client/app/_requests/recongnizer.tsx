@@ -77,3 +77,11 @@ export async function CreateTrainingData(sessionToken: string, csrfToken: string
     formData.append('label', label);
     return requestApi(`/training-group/${groupId}/images/`, 'POST', formData, sessionToken, csrfToken);
 }
+
+// 学習データの更新
+export async function UpdateTrainingData(sessionToken: string, csrfToken: string, id: number, label: string, image: File) {
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('label', label);
+    return requestApi(`/training-data/${id}/`, 'PATCH', formData, sessionToken, csrfToken);
+}
