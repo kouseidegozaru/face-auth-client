@@ -6,6 +6,19 @@ import TrashIcon from '../../../public/Trash.svg'
 import GroupIcon from '../../../public/Group.svg'
 import { Button } from '@/app/_components/buttons'
 
+export default function Page() {
+    return (
+        <>
+            <HeaderContainer>
+                <HeaderTitle />
+                <RegisterButton />
+            </HeaderContainer>
+            <ContentContainer>
+                <GroupList />
+            </ContentContainer>
+        </>
+    )
+}
 
 function HeaderContainer({ children }: { children: React.ReactNode }) {
     return (
