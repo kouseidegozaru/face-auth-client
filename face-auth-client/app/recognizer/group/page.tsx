@@ -5,6 +5,7 @@ import EditIcon from '../../../public/Edit.svg'
 import TrashIcon from '../../../public/Trash.svg'
 import GroupIcon from '../../../public/Group.svg'
 import { Button } from '@/app/_components/buttons'
+import { GroupDataPage } from '@/app/_links/recognizer'
 
 export default function Page() {
     return (
@@ -63,10 +64,12 @@ function GroupList() {
 function GroupCard({ group_id , group_name , updated_at }: { group_id: string, group_name: string, updated_at: string }) {
     return (
         <div className="w-full h-[40px] min-h-[40px] bg-foreground border-b border-line flex items-center justify-between px-4 flex-0">
-            <div className="flex items-center">
-                <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
-                <h2 className="font-bold text-[14px]">{group_name}</h2>
-            </div>
+            <GroupDataPage.Link linkKey={group_id}>
+                <div className="flex items-center">
+                    <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
+                    <h2 className="font-bold text-[14px]">{group_name}</h2>
+                </div>
+            </GroupDataPage.Link>
             <div className="flex items-center">
                 <p className="text-[13px] text-subtext">{updated_at}</p>
             </div>          
