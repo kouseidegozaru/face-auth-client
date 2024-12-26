@@ -69,3 +69,11 @@ export async function DeleteTrainingGroup(sessionToken: string, csrfToken: strin
 export async function GetTrainingData(sessionToken: string, groupId: number) {
     return requestApi(`/training-group/${groupId}/images/`, 'GET', null, sessionToken);
 }
+
+// 学習データの作成
+export async function CreateTrainingData(sessionToken: string, csrfToken: string, groupId: number, label: string, image: File) {
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('label', label);
+    return requestApi(`/training-group/${groupId}/images/`, 'POST', formData, sessionToken, csrfToken);
+}
