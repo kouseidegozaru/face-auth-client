@@ -54,3 +54,8 @@ export async function GetTrainingGroup(sessionToken: string, csrfToken: string) 
 export async function CreateTrainingGroup(sessionToken: string, csrfToken: string, name: string) {
     return requestApi('/training-group/', 'POST', { name }, sessionToken, csrfToken);
 }
+
+// グループ名の更新
+export async function UpdateTrainingGroupName(sessionToken: string, csrfToken: string, id: number, name: string) {
+    return requestApi(`/training-group/${id}/`, 'PATCH', { name }, sessionToken, csrfToken);
+}
