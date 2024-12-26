@@ -49,3 +49,8 @@ async function requestApi(endpoint: string, method: string, body: object | null,
 export async function GetTrainingGroup(sessionToken: string, csrfToken: string) {
     return requestApi('/training-group/', 'GET', null, sessionToken, csrfToken);
 }
+
+// グループの作成
+export async function CreateTrainingGroup(sessionToken: string, csrfToken: string, name: string) {
+    return requestApi('/training-group/', 'POST', { name }, sessionToken, csrfToken);
+}
