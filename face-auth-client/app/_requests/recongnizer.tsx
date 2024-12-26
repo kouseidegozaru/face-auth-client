@@ -44,3 +44,8 @@ async function requestApi(endpoint: string, method: string, body: object | null,
         throw error;
     }
 }
+
+// グループ一覧の取得
+export async function GetTrainingGroup(sessionToken: string, csrfToken: string) {
+    return requestApi('/training-group/', 'GET', null, sessionToken, csrfToken);
+}
