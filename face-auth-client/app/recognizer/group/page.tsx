@@ -88,6 +88,14 @@ function GroupList() {
         setIsLoading(false);
     }, [])
 
+    const dateFormat = (date: string) => {
+        const dateObj = new Date(date);
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day} ${dateObj.getHours()}:${dateObj.getMinutes()}:${dateObj.getSeconds()}`;
+    }
+
     return (
         <>
             {isLoading ? (
@@ -99,7 +107,7 @@ function GroupList() {
                             key={group.id}
                             group_id={group.id}
                             group_name={group.name}
-                            updated_at={group.updated_at}
+                            updated_at={dateFormat(group.updated_at)}
                         />
                     ))}
                 </div>
