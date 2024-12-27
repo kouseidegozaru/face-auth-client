@@ -2,12 +2,16 @@
 
 import TitleIcon from "../../public/User check.svg"
 import UserIcon from "../../public/User.svg"
-import {Button} from "../_components/buttons"
+import { Button } from "../_components/buttons"
+import { GroupPage } from "../_links/recognizer"
+import { getUser } from "../_requests/accounts"
+import { GetSessionToken } from "../_requests/cookie"
+import { useEffect, useState } from "react"
 
 
 const HeaderContainer = ({ children }) => {
     return (
-        <div className="fixed bg-foreground h-[100px] w-full z-[100]">
+        <div className="fixed bg-foreground h-[75px] w-full z-[100]">
             {children}
         </div>
     );
@@ -17,7 +21,7 @@ const HeaderContainer = ({ children }) => {
 // ヘッダー上部
 const TopHeader = ({ children }) => {
     return (
-        <div className="bg-foreground h-[60px] w-full flex items-center justify-between">
+        <div className="bg-foreground h-[45px] w-full flex items-center justify-between">
             {children}
         </div>
     );
@@ -45,12 +49,31 @@ const UserNameDisplay = ({ children }: { children: React.ReactNode }) => {// TOD
 }
 
 const UserProfile = ({ children }: { children: React.ReactNode }) => {
+    const [userName, setUserName] = useState("User");
+    const loadUser = async () => {
+        //セッショントークンの取得
+        const sessionToken = await GetSessionToken();
+        if (sessionToken == null) {
+            setUserName("Guest");
+            return;
+        }
+        // ユーザー情報の取得
+        const response = await getUser(sessionToken);
+        const { email } = await response.json();
+        setUserName(email);
+    }
+
+    useEffect(() => {
+        loadUser();
+    }, []);
+
+    
     return (
-        <div className="flex items-center justify-center h-full w-[200px] mr-4 border-line border-l-2 rounded-none">
+        <div className="flex items-center justify-center h-full w-[200px] mr-4 border-line border-l rounded-none">
             <UserIcon className="w-5 h-5 fill-none mr-2 stroke-subtext stroke-2"></UserIcon>
-            <div className="font-default h-full flex items-center text-1xl text-subtext">
+            <div className="font-default h-full flex items-center text-sm text-subtext">
                 <UserNameDisplay>
-                    {children}
+                    {userName}
                 </UserNameDisplay>
             </div>
         </div>
@@ -61,23 +84,24 @@ const UserProfile = ({ children }: { children: React.ReactNode }) => {
 // ヘッダー下部
 const BottomHeader = ({ children }) => {
     return (
-        <div className="bg-header h-[40px] w-full flex items-center justify-end">
+        <div className="bg-header h-[30px] w-full flex items-center justify-end">
             {children}
         </div>
     );
 };
 
 const HomeButton = () => {
-    const onClick = () => {}// TODO: 画面遷移
     return (
-        <Button className="font-light h-[27px] mr-4" onClick={onClick}>Home</Button>
+        <GroupPage.Link>
+            <Button className="font-light h-[20px] mr-4 text-[12px] ">Home</Button>
+        </GroupPage.Link>
     );
 }
 
 // Headerの後ろの空白部分
 const HeaderPadding = () => {
     return (
-        <div className="h-[100px]" />
+        <div className="h-[75px]" />
     );
 }
 
