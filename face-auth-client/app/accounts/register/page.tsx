@@ -6,6 +6,7 @@ import { registerUser } from "../../_requests/accounts"
 import { RegisterEmailSendPage, RegisterEmailResendPage } from "../../_links/accounts"
 import { useMessageModal } from "../../_components/MessageModal"
 import Loading from "../../_components/loading"
+import { UserInput , PasswordInput } from "@/app/_components/input"
 
 export default function Page() {
     return (
@@ -82,25 +83,25 @@ const ContentContainer = () => {
 
     return (
         <div className="w-full h-[calc(100%-50px)] flex flex-col items-center justify-evenly">
-            <CustomInput 
+            <UserInput
                 label="ユーザー名" 
                 inputValue={username} 
                 setInputValue={(value) => { setUsername(value); validate("username", value) }} 
                 errorMessage={errors.username} 
             />
-            <CustomInput 
+            <UserInput 
                 label="メールアドレス" 
                 inputValue={email} 
                 setInputValue={(value) => { setEmail(value); validate("email", value) }} 
                 errorMessage={errors.email} 
             />
-            <CustomInput 
+            <PasswordInput 
                 label="パスワード" 
                 inputValue={password1} 
                 setInputValue={(value) => { setPassword1(value); validate("password1", value) }} 
                 errorMessage={errors.password1} 
             />
-            <CustomInput 
+            <PasswordInput 
                 label="パスワード(確認用)" 
                 inputValue={password2} 
                 setInputValue={(value) => { setPassword2(value); validate("password2", value) }} 
@@ -153,26 +154,6 @@ const ContentContainer = () => {
                 <p className="text-[12px]">から</p>
             </div>
             <Modal />
-        </div>
-    );
-}
-
-const CustomInput = ({ label, inputValue, setInputValue, errorMessage }) => {
-    const onChange = (e) => {
-        setInputValue(e.target.value)
-    }
-    return (
-        <div className="w-[350px] h-auto bg-foreground">
-            <p className="text-[11px] text-subtext ml-2 mb-1 font-bold">{label}</p>
-            <input 
-                type="text" 
-                value={inputValue} 
-                onChange={onChange} 
-                className={`w-full h-[40px] bg-foreground rounded-[10px] border px-2 text-[14px] ${
-                    errorMessage ? "border-error" : "border-line"
-                }`} 
-            />
-            {errorMessage && <p className="text-error text-xs mt-1 ml-2">{errorMessage}</p>}
         </div>
     );
 }

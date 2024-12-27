@@ -6,6 +6,7 @@ import { sendPasswordResetEmail } from "@/app/_requests/accounts"
 import { useMessageModal } from "@/app/_components/MessageModal"
 import { PasswordResetEmailSendPage } from "@/app/_links/accounts"
 import Loading from "@/app/_components/loading"
+import { UserInput } from "@/app/_components/input"
 
 export default function Page() {
     return (
@@ -56,7 +57,7 @@ const ContentContainer = () => {
         <div className="w-full h-[calc(100%-50px)] flex flex-col items-center justify-center">
             <div className="w-full h-[77%] flex flex-col items-center justify-evenly">
                 <p className="text-sm font-bold m-4">パスワード変更メールを送信します</p>
-                <CustomInput 
+                <UserInput 
                     label="メールアドレス" 
                     inputValue={email} 
                     setInputValue={(value) => { setEmail(value); validate("email", value) }} 
@@ -101,26 +102,6 @@ const ContentContainer = () => {
                 <Loading disabled={!loading}/>
             </div>
             <Modal />
-        </div>
-    );
-}
-
-const CustomInput = ({ label, inputValue, setInputValue, errorMessage }) => {
-    const onChange = (e) => {
-        setInputValue(e.target.value)
-    }
-    return (
-        <div className="w-[350px] h-auto bg-foreground">
-            <p className="text-[11px] text-subtext ml-2 mb-1 font-bold">{label}</p>
-            <input 
-                type="text" 
-                value={inputValue} 
-                onChange={onChange} 
-                className={`w-full h-[40px] bg-foreground rounded-[10px] border px-2 text-[14px] ${
-                    errorMessage ? "border-error" : "border-line"
-                }`} 
-            />
-            {errorMessage && <p className="text-error text-xs mt-1 ml-2">{errorMessage}</p>}
         </div>
     );
 }
