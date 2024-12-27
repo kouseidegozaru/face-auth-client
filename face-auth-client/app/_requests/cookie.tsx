@@ -33,7 +33,8 @@ async function requestApi(endpoint: string, method: string, body: object | null)
     }
 }
 
-export async function GetSessionToken(): Promise<string | null> {
+export async function GetSessionToken(): Promise<
+    { sessionToken: string } | {}> {
     return (await requestApi('/session/', 'GET', null)).json();
 }
 
