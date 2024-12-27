@@ -7,6 +7,7 @@ import { GetTrainingGroup } from '@/app/_requests/recongnizer'
 import { GetSessionToken } from '@/app/_requests/cookie'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
+import LogoutMessage from '@/app/accounts/logout/message'
 
 
 type Group = { id: string, name: string, updated_at: string };
@@ -69,7 +70,7 @@ export default function Sidebar() {
 
 function SidebarContainer({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-[200px] h-full bg-foreground border-r border-line flex flex-col z-[99]">
+        <div className="w-[200px] h-full bg-foreground border-r border-line flex flex-col z-[100]">
             {children}
         </div>
     );
@@ -186,10 +187,11 @@ function SidebarFooterHead() {
 }
 
 function LogoutContent() {
-    /* TODO: ログアウト処理 */
+    const [isOpen, setOpen] = useState(false);
     return (
         <div className="w-full h-[50px] flex items-center justify-center">
-            <Button className="border-cancel border text-cancel text-[12px] h-[25px] hover:bg-line" onClick={() => {}}>Logout</Button>
+            <LogoutMessage isOpen={isOpen}/>
+            <Button className="border-cancel border text-cancel text-[12px] h-[25px] hover:bg-line" onClick={() => setOpen(true)}>Logout</Button>
         </div>
     );
 }
