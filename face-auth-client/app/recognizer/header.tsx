@@ -4,6 +4,9 @@ import TitleIcon from "../../public/User check.svg"
 import UserIcon from "../../public/User.svg"
 import { Button } from "../_components/buttons"
 import { GroupPage } from "../_links/recognizer"
+import { getUser } from "../_requests/accounts"
+import { GetSessionToken } from "../_requests/cookie"
+import { useEffect, useState } from "react"
 
 
 const HeaderContainer = ({ children }) => {
@@ -46,12 +49,31 @@ const UserNameDisplay = ({ children }: { children: React.ReactNode }) => {// TOD
 }
 
 const UserProfile = ({ children }: { children: React.ReactNode }) => {
+    const [userName, setUserName] = useState("User");
+    const loadUser = async () => {
+        //セッショントークンの取得
+        const sessionToken = await GetSessionToken();
+        if (sessionToken == null) {
+            setUserName("Guest");
+            return;
+        }
+        // ユーザー情報の取得
+        const response = await getUser(sessionToken);
+        const { email } = await response.json();
+        setUserName(email);
+    }
+
+    useEffect(() => {
+        loadUser();
+    }, []);
+
+    
     return (
         <div className="flex items-center justify-center h-full w-[200px] mr-4 border-line border-l rounded-none">
             <UserIcon className="w-5 h-5 fill-none mr-2 stroke-subtext stroke-2"></UserIcon>
             <div className="font-default h-full flex items-center text-sm text-subtext">
                 <UserNameDisplay>
-                    {children}
+                    {userName}
                 </UserNameDisplay>
             </div>
         </div>
