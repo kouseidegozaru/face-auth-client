@@ -27,7 +27,8 @@ async function requestApi(endpoint: string, method: string, body: object | null,
     // リクエストオブジェクト
     const request : RequestInit = {
         method: method,
-        headers: headers
+        headers: headers,
+        credentials: 'include'
     }
 
     // メソッドがPOSTの場合、bodyを追加
