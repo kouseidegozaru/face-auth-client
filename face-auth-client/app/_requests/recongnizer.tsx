@@ -47,27 +47,27 @@ async function requestApi(endpoint: string, method: string, body: object | null,
 
 // グループ一覧の取得
 export async function GetTrainingGroup(sessionToken: string) {
-    return requestApi('/training-group/', 'GET', null, sessionToken);
+    return requestApi('/training-groups/', 'GET', null, sessionToken);
 }
 
 // グループの作成
 export async function CreateTrainingGroup(sessionToken: string, csrfToken: string, name: string) {
-    return requestApi('/training-group/', 'POST', { name }, sessionToken, csrfToken);
+    return requestApi('/training-groups/', 'POST', { name }, sessionToken, csrfToken);
 }
 
 // グループ名の更新
 export async function UpdateTrainingGroupName(sessionToken: string, csrfToken: string, id: number, name: string) {
-    return requestApi(`/training-group/${id}/`, 'PATCH', { name }, sessionToken, csrfToken);
+    return requestApi(`/training-groups/${id}/`, 'PATCH', { name }, sessionToken, csrfToken);
 }
 
 // グループの削除
 export async function DeleteTrainingGroup(sessionToken: string, csrfToken: string, id: number) {
-    return requestApi(`/training-group/${id}/`, 'DELETE', null, sessionToken, csrfToken);
+    return requestApi(`/training-groups/${id}/`, 'DELETE', null, sessionToken, csrfToken);
 }
 
 // 学習データの取得
 export async function GetTrainingData(sessionToken: string, groupId: number) {
-    return requestApi(`/training-group/${groupId}/images/`, 'GET', null, sessionToken);
+    return requestApi(`/training-groups/${groupId}/images/`, 'GET', null, sessionToken);
 }
 
 // 学習データの作成
@@ -75,7 +75,7 @@ export async function CreateTrainingData(sessionToken: string, csrfToken: string
     const formData = new FormData();
     formData.append('image', image);
     formData.append('label', label);
-    return requestApi(`/training-group/${groupId}/images/`, 'POST', formData, sessionToken, csrfToken);
+    return requestApi(`/training-groups/${groupId}/images/`, 'POST', formData, sessionToken, csrfToken);
 }
 
 // 学習データの更新
