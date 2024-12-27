@@ -1,13 +1,43 @@
 import AddGroupIcon from "../../public/Add Group.svg";
 import GroupIcon from "../../public/Group.svg";
 import ImageIcon from "../../public/Image.svg";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "../_components/buttons";
+import { GetTrainingGroup } from '@/app/_requests/recongnizer'
+import { GetSessionToken } from '@/app/_requests/cookie'
+import { useMessageModal } from '@/app/_components/MessageModal'
 
-// テスト用グループのインポート
-import { TestGroup } from "./testData";
+
+type Group = { id: string, name: string, updated_at: string };
+type Groups = Group[];
 
 export default function Sidebar() {
+    const { showModal, Modal } = useMessageModal();
+    const [groups, setGroups] = useState<Group[]>([]);
+
+    const loadData = async () => {
+        // セッショントークンを取得
+        const sessionToken = await GetSessionToken();
+        if (sessionToken == null) {
+            showModal("ログインしてください", "error", 4000);
+            return;
+        }
+        // グループ一覧を取得
+        const response = await GetTrainingGroup(sessionToken);
+        if (!response.ok) {
+            showModal("グループの取得に失敗しました", "error", 4000);
+            return;
+        }
+
+        // グループ一覧をセット
+        const data: Groups = await response.json();
+        setGroups(data);
+    }
+
+    useEffect(() => {
+        loadData();
+    }, [])
+
     return (
         <SidebarContainer>
             <SidebarHeader>
@@ -16,12 +46,13 @@ export default function Sidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarContentHead />
-                <SidebarItems groups={TestGroup} />{/* TODO: データベースから取得 */}
+                <SidebarItems groups={groups} />{/* TODO: データベースから取得 */}
             </SidebarContent>
             <SidebarFooter>
                 <SidebarFooterHead />
                 <LogoutContent />
             </SidebarFooter>
+            <Modal />
         </SidebarContainer>
     );
 }
@@ -72,16 +103,7 @@ function SidebarContentHead() {
     );
 }
 
-type Group = {
-    groupID: string;
-    groupName: string;
-    groupDataLabels: Array<{ id: string; label: string}>;
-}
-type Groups = {
-    groups: Array<Group>;
-};
-
-function SidebarItems({ groups }: Groups) {
+function SidebarItems({ groups }: { groups: Groups }) {
     if (!groups || groups.length === 0) {
         return <div className="flex justify-center h-full text-subtext text-sm">グループがありません</div>;
     }
@@ -90,7 +112,7 @@ function SidebarItems({ groups }: Groups) {
         <div className="w-full">
             <div className="mt-4"></div>{/*空白調整用*/}
             {groups.map((group) => (
-                <TreeItem key={group.groupID} group={group} />
+                <TreeItem key={group.id} group={group} />
             ))}
         </div>
     );
@@ -112,7 +134,7 @@ function TreeItem({ group }: { group: Group }) {
             </span>
             <div className="cursor-pointer flex overflow-hidden items-center">
                 <GroupIcon className="w-4 h-4 fill-none mr-1 stroke-primary1 stroke-2"></GroupIcon>
-                <p className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.groupName}</p>
+                <p className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.name}</p>
             </div>
         </div>
 
