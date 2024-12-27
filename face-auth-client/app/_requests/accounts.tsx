@@ -1,4 +1,5 @@
 // usersエンドポイントへAPIリクエストを行う
+'use cilient'
 
 // APIベースURL
 const API_BASE_URL = process.env.API_BASE_URL
@@ -100,6 +101,9 @@ export async function getUser(sessionToken: string) {
 }
 
 // csrfトークンの発行
-export async function getCSRFToken() {
-    return requestApi('/csrf-token/', 'GET', {});
+export async function getCSRFToken() : Promise<string | null> {
+    const response = await requestApi('/csrf-token/', 'GET', {});
+    const data = await response.json();
+    const { csrfToken } = data;
+    return csrfToken
 }

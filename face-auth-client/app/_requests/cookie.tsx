@@ -1,4 +1,5 @@
 // usersエンドポイントへAPIリクエストを行う
+'use client'
 
 // APIベースURL
 const API_ROOT_URL = `http://localhost:3000/api`
@@ -34,7 +35,10 @@ async function requestApi(endpoint: string, method: string, body: object | null)
 }
 
 export async function GetSessionToken(): Promise<string | null> {
-    return (await requestApi('/session/', 'GET', null)).json();
+    const response = await requestApi('/session/', 'GET', null)
+    const data = await response.json();
+    const { sessionToken } = data;
+    return sessionToken
 }
 
 export async function SetSessionToken(sessionToken: string): Promise<string | null> {

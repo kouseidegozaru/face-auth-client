@@ -7,6 +7,7 @@ import { useMessageModal } from "../../_components/MessageModal"
 import { GroupPage } from "../../_links/recognizer"
 import Loading from "../../_components/loading"
 import { SetSessionToken } from "../../_requests/cookie"
+import { UserInput , PasswordInput } from "@/app/_components/input"
 
 export default function Page() {
     return (
@@ -64,13 +65,13 @@ const ContentContainer = () => {
     return (
         <div className="w-full h-[calc(100%-50px)] flex flex-col items-center justify-center">
             <div className="w-full h-[77%] flex flex-col items-center justify-evenly">
-                <CustomInput 
+                <UserInput 
                     label="メールアドレス" 
                     inputValue={email} 
                     setInputValue={(value) => { setEmail(value); validate("email", value) }} 
                     errorMessage={errors.email} 
                 />
-                <CustomInput 
+                <PasswordInput 
                     label="パスワード" 
                     inputValue={password} 
                     setInputValue={(value) => { setPassword(value); validate("password", value) }} 
@@ -118,26 +119,6 @@ const ContentContainer = () => {
                 <Loading disabled={!loading} />
             </div>
             <Modal />
-        </div>
-    );
-}
-
-const CustomInput = ({ label, inputValue, setInputValue, errorMessage }) => {
-    const onChange = (e) => {
-        setInputValue(e.target.value)
-    }
-    return (
-        <div className="w-[350px] h-auto bg-foreground">
-            <p className="text-[11px] text-subtext ml-2 mb-1 font-bold">{label}</p>
-            <input 
-                type="text" 
-                value={inputValue} 
-                onChange={onChange} 
-                className={`w-full h-[40px] bg-foreground rounded-[10px] border px-2 text-[14px] ${
-                    errorMessage ? "border-error" : "border-line"
-                }`} 
-            />
-            {errorMessage && <p className="text-error text-xs mt-1 ml-2">{errorMessage}</p>}
         </div>
     );
 }
