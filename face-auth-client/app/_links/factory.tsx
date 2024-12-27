@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 type GeneratedPath = {
     Link: React.FC<{ children: React.ReactNode; linkKey?: string | null }>;
-    Redirect: ({ linkKey }: { linkKey?: string | null }) => void;
+    Redirect: ({ linkKey }?: { linkKey?: string | null }) => void;
 };
 
 /**
