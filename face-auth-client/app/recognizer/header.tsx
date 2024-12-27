@@ -2,7 +2,8 @@
 
 import TitleIcon from "../../public/User check.svg"
 import UserIcon from "../../public/User.svg"
-import {Button} from "../_components/buttons"
+import { Button } from "../_components/buttons"
+import { GroupPage } from "../_links/recognizer"
 
 
 const HeaderContainer = ({ children }) => {
@@ -68,9 +69,10 @@ const BottomHeader = ({ children }) => {
 };
 
 const HomeButton = () => {
-    const onClick = () => {}// TODO: 画面遷移
     return (
-        <Button className="font-light h-[20px] mr-4 text-[12px] " onClick={onClick}>Home</Button>
+        <GroupPage.Link>
+            <Button className="font-light h-[20px] mr-4 text-[12px] ">Home</Button>
+        </GroupPage.Link>
     );
 }
 
