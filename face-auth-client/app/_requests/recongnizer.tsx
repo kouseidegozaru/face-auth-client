@@ -57,22 +57,22 @@ export async function CreateTrainingGroup(sessionToken: string, csrfToken: strin
 }
 
 // グループ名の更新
-export async function UpdateTrainingGroupName(sessionToken: string, csrfToken: string, id: number, name: string) {
+export async function UpdateTrainingGroupName(sessionToken: string, csrfToken: string, id: string, name: string) {
     return requestApi(`/training-groups/${id}/`, 'PATCH', { name }, sessionToken, csrfToken);
 }
 
 // グループの削除
-export async function DeleteTrainingGroup(sessionToken: string, csrfToken: string, id: number) {
+export async function DeleteTrainingGroup(sessionToken: string, csrfToken: string, id: string) {
     return requestApi(`/training-groups/${id}/`, 'DELETE', null, sessionToken, csrfToken);
 }
 
 // 学習データの取得
-export async function GetTrainingData(sessionToken: string, groupId: number) {
+export async function GetTrainingData(sessionToken: string, groupId: string) {
     return requestApi(`/training-groups/${groupId}/images/`, 'GET', null, sessionToken);
 }
 
 // 学習データの作成
-export async function CreateTrainingData(sessionToken: string, csrfToken: string, groupId: number, label: string, image: File) {
+export async function CreateTrainingData(sessionToken: string, csrfToken: string, groupId: string, label: string, image: File) {
     const formData = new FormData();
     formData.append('image', image);
     formData.append('label', label);
@@ -80,7 +80,7 @@ export async function CreateTrainingData(sessionToken: string, csrfToken: string
 }
 
 // 学習データの更新
-export async function UpdateTrainingData(sessionToken: string, csrfToken: string, id: number, label: string, image: File) {
+export async function UpdateTrainingData(sessionToken: string, csrfToken: string, id: string, label: string, image: File) {
     const formData = new FormData();
     formData.append('image', image);
     formData.append('label', label);
@@ -88,12 +88,12 @@ export async function UpdateTrainingData(sessionToken: string, csrfToken: string
 }
 
 // 学習データの削除
-export async function DeleteTrainingData(sessionToken: string, csrfToken: string, id: number) {
+export async function DeleteTrainingData(sessionToken: string, csrfToken: string, id: string) {
     return requestApi(`/training-data/${id}/`, 'DELETE', null, sessionToken, csrfToken);
 }
 
 // 学習データの学習
-export async function Train(sessionToken: string, csrfToken: string, groupId: number) {
+export async function Train(sessionToken: string, csrfToken: string, groupId: string) {
     return requestApi(`/train/${groupId}/`, 'POST', null, sessionToken, csrfToken);
 }
 
