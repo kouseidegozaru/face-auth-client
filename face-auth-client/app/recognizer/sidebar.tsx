@@ -28,7 +28,7 @@ export default function Sidebar() {
 
 function SidebarContainer({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-[200px] h-full bg-foreground border-r-2 border-line flex flex-col z-[99]">
+        <div className="w-[200px] h-full bg-foreground border-r border-line flex flex-col z-[99]">
             {children}
         </div>
     );
@@ -36,7 +36,7 @@ function SidebarContainer({ children }: { children: React.ReactNode }) {
 
 function SidebarHeader({ children }: { children: React.ReactNode }) {
     return (
-        <div className="bg-foreground h-[50px] w-full flex items-center justify-between">
+        <div className="h-[50px] w-full flex items-center justify-between">
             {children}
         </div>
     );
@@ -58,7 +58,7 @@ function AddGroup() {
 
 function SidebarContent({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-full flex-1 overflow-y-scroll">
+        <div className="w-full flex-1 overflow-y-auto">
             {children}
         </div>
     );
@@ -66,8 +66,8 @@ function SidebarContent({ children }: { children: React.ReactNode }) {
 
 function SidebarContentHead() {
     return (
-        <div className="h-[25px] w-full flex items-left border-line border-b-2">
-            <p className="ml-2 text-1xl text-subtext">Group</p>
+        <div className="h-[25px] w-full flex items-left border-line border-b">
+            <p className="ml-1 text-[13px] font-bold text-subtext">Group</p>
         </div>
     );
 }
@@ -101,18 +101,18 @@ function TreeItem({ group }: { group: Group }) {
   const [isOpened, setIsOpened] = useState(false);
 
   return (
-    <div className="ml-4 mb-2">
+    <div className="ml-4 mb-1">
         <div
         onClick={() => () => {{/*TODO: 画面遷移 */}}}
-        className="flex items-center"
+        className="flex items-center hover:bg-line rounded-sm overflow-hidden"
         >
             {/* グループの中身を開けるようにする */}
-            <span className="text-primary1 mr-2 text-[10px] select-none" onClick={() => setIsOpened(!isOpened)}>
+            <span className="text-primary1 mr-1 text-[10px] select-none" onClick={() => setIsOpened(!isOpened)}>
                 {isOpened ? "▼" : "▶"}
             </span>
-            <div className="cursor-pointer flex overflow-hidden">
-                <GroupIcon className="w-5 h-5 fill-none mr-2 stroke-subtext stroke-2"></GroupIcon>
-                <p className="overflow-hidden text-ellipsis max-w-[75%] text-1xl">{group.groupName}</p>
+            <div className="cursor-pointer flex overflow-hidden items-center">
+                <GroupIcon className="w-4 h-4 fill-none mr-1 stroke-primary1 stroke-2"></GroupIcon>
+                <p className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.groupName}</p>
             </div>
         </div>
 
@@ -122,13 +122,13 @@ function TreeItem({ group }: { group: Group }) {
             {/* 学習データがグループに存在する場合表示する */}
             {group.groupDataLabels && group.groupDataLabels.length > 0 ? (
                 group.groupDataLabels.map((label) => (
-                <div key={label.id} className="flex ml-[20px] cursor-pointer">
-                    <ImageIcon className="scale-75 w-6 h-6 fill-none mr-1 stroke-primary1 stroke-2"></ImageIcon>
+                <div key={label.id} className="flex ml-[20px] cursor-pointer border-line border-l items-center hover:bg-line rounded-sm overflow-hidden">
+                    <ImageIcon className="scale-50 w-5 h-5 fill-none mr-1 stroke-subtext stroke-2"></ImageIcon>
                     <div key={label.id} className="overflow-hidden text-ellipsis max-w-[60%] text-sm">{label.label}</div>
                 </div>
                 ))
             ) : (
-                <div className="ml-4 text-subtext text-sm mt-1">学習データがありません</div>
+                <div className="ml-4 text-subtext text-[12px] font-bold mt-1">学習データがありません</div>
             )}
             </>
         )}
@@ -139,7 +139,7 @@ function TreeItem({ group }: { group: Group }) {
 
 function SidebarFooter({ children }: { children: React.ReactNode }) {
     return (
-        <div className="h-auto w-full bg-foreground">
+        <div className="h-auto w-full">
             {children}
         </div>
     );
@@ -147,8 +147,8 @@ function SidebarFooter({ children }: { children: React.ReactNode }) {
 
 function SidebarFooterHead() {
     return (
-        <div className="h-[25px] w-full flex items-left border-line border-b-2">
-            <p className="ml-2 text-1xl text-subtext">User</p>
+        <div className="h-[25px] w-full flex items-left border-line border-b">
+            <p className="ml-1 text-[13px] font-bold text-subtext">User</p>
         </div>
     );
 }
@@ -157,7 +157,7 @@ function LogoutContent() {
     /* TODO: ログアウト処理 */
     return (
         <div className="w-full h-[50px] flex items-center justify-center">
-            <Button className="border-cancel border-2 text-cancel text-sm height-[30px]" onClick={() => {}}>Logout</Button>
+            <Button className="border-cancel border text-cancel text-[12px] h-[25px] hover:bg-line" onClick={() => {}}>Logout</Button>
         </div>
     );
 }
