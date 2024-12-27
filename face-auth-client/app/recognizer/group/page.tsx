@@ -10,6 +10,7 @@ import { GetTrainingGroup } from '@/app/_requests/recongnizer'
 import { useEffect, useState } from 'react'
 import { GetSessionToken } from '@/app/_requests/cookie'
 import { useMessageModal } from '@/app/_components/MessageModal'
+import Loading from '@/app/_components/loading'
 
 export default function Page() {
     return (
@@ -60,6 +61,7 @@ function GroupList() {
     type Group = { id: string, name: string, updated_at: string };
     const { showModal, Modal } = useMessageModal();
     const [groups, setGroups] = useState<Group[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const loadData = async () => {
         // セッショントークンを取得
@@ -81,14 +83,27 @@ function GroupList() {
     }
 
     useEffect(() => {
+        setIsLoading(true);
         loadData();
+        setIsLoading(false);
     }, [])
 
     return (
         <>
-            <div className="w-full h-full flex flex-col flex-0 overflow-y-auto">
-                {groups.map((group) => (<GroupCard key={group.id} group_id={group.id} group_name={group.name} updated_at={group.updated_at} />))}
-            </div>
+            {isLoading ? (
+                <Loading disabled={false} />
+            ) : (
+                <div className="w-full h-full flex flex-col flex-0 overflow-y-auto">
+                    {groups.map((group) => (
+                        <GroupCard
+                            key={group.id}
+                            group_id={group.id}
+                            group_name={group.name}
+                            updated_at={group.updated_at}
+                        />
+                    ))}
+                </div>
+            )}
             <Modal />
         </>
     )
