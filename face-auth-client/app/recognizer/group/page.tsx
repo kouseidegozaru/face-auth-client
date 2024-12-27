@@ -118,20 +118,31 @@ function GroupList() {
 }
 
 function GroupCard({ group_id, group_name, updated_at }: { group_id: string, group_name: string, updated_at: string }) {
+    const [isEditing, setIsEditing] = useState(false);
+
     return (
         <div className="w-full h-[40px] min-h-[40px] bg-foreground border-b border-line flex items-center justify-between px-4 flex-0">
-            <GroupDataPage.Link linkKey={group_id}>
-                <div className="flex items-center">
+            {isEditing ? (
+                // 編集中の場合
+                <div className="flex items-center w-auto">
                     <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
-                    <h2 className="font-bold text-[14px]">{group_name}</h2>
+                    <input type="text" className="font-bold text-[14px] w-[100px]" defaultValue={group_name} />
                 </div>
-            </GroupDataPage.Link>
+            ): (
+                <GroupDataPage.Link linkKey={group_id}>
+                    <div className="flex items-center w-auto">
+                        <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
+                        <h2 className="font-bold text-[14px] w-[100px] overflow-hidden text-ellipsis">{group_name}</h2>
+                    </div>
+                </GroupDataPage.Link>
+            )}
+
             <div className="flex items-center">
                 <p className="text-[13px] text-subtext">{updated_at}</p>
             </div>
             <div className="flex items-center h-full">
                 <div className='h-full w-[40px] flex items-center justify-center text-subtext'>
-                    <EditIcon className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
+                    <EditIcon onClick={() => setIsEditing(true)} className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
                 </div>
                 <div className='h-full w-[40px] flex items-center justify-center text-subtext'>
                     <TrashIcon className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
