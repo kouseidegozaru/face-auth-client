@@ -1,13 +1,48 @@
 import AddGroupIcon from "../../public/Add Group.svg";
 import GroupIcon from "../../public/Group.svg";
 import ImageIcon from "../../public/Image.svg";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "../_components/buttons";
+import { GetTrainingGroup } from '@/app/_requests/recongnizer'
+import { GetSessionToken } from '@/app/_requests/cookie'
+import { useMessageModal } from '@/app/_components/MessageModal'
+import Loading from '@/app/_components/loading'
+import LogoutMessage from '@/app/accounts/logout/message'
 
-// テスト用グループのインポート
-import { TestGroup } from "./testData";
+
+type Group = { id: string, name: string, updated_at: string };
+type Groups = Group[];
 
 export default function Sidebar() {
+    const { showModal, Modal } = useMessageModal();
+    const [groups, setGroups] = useState<Group[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const loadData = async () => {
+        // セッショントークンを取得
+        const sessionToken = await GetSessionToken();
+        if (sessionToken == null) {
+            showModal("ログインしてください", "error", 4000);
+            return;
+        }
+        // グループ一覧を取得
+        const response = await GetTrainingGroup(sessionToken);
+        if (!response.ok) {
+            showModal("グループの取得に失敗しました", "error", 4000);
+            return;
+        }
+
+        // グループ一覧をセット
+        const data: Groups = await response.json();
+        setGroups(data);
+    }
+
+    useEffect(() => {
+        setIsLoading(true);
+        loadData();
+        setIsLoading(false);
+    }, [])
+
     return (
         <SidebarContainer>
             <SidebarHeader>
@@ -16,19 +51,26 @@ export default function Sidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarContentHead />
-                <SidebarItems groups={TestGroup} />{/* TODO: データベースから取得 */}
+                {isLoading ? (
+                    <div className="mt-4">
+                        <Loading disabled={false} />
+                    </div>
+                ):
+                    <SidebarItems groups={groups} />
+                }
             </SidebarContent>
             <SidebarFooter>
                 <SidebarFooterHead />
                 <LogoutContent />
             </SidebarFooter>
+            <Modal />
         </SidebarContainer>
     );
 }
 
 function SidebarContainer({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-[200px] h-full bg-foreground border-r-2 border-line flex flex-col z-[99]">
+        <div className="w-[200px] h-full bg-foreground border-r border-line flex flex-col z-[100]">
             {children}
         </div>
     );
@@ -36,7 +78,7 @@ function SidebarContainer({ children }: { children: React.ReactNode }) {
 
 function SidebarHeader({ children }: { children: React.ReactNode }) {
     return (
-        <div className="bg-foreground h-[50px] w-full flex items-center justify-between">
+        <div className="h-[50px] w-full flex items-center justify-between">
             {children}
         </div>
     );
@@ -58,7 +100,7 @@ function AddGroup() {
 
 function SidebarContent({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-full flex-1 overflow-y-scroll">
+        <div className="w-full flex-1 overflow-y-auto">
             {children}
         </div>
     );
@@ -66,22 +108,13 @@ function SidebarContent({ children }: { children: React.ReactNode }) {
 
 function SidebarContentHead() {
     return (
-        <div className="h-[25px] w-full flex items-left border-line border-b-2">
-            <p className="ml-2 text-1xl text-subtext">Group</p>
+        <div className="h-[25px] w-full flex items-left border-line border-b">
+            <p className="ml-1 text-[13px] font-bold text-subtext">Group</p>
         </div>
     );
 }
 
-type Group = {
-    groupID: string;
-    groupName: string;
-    groupDataLabels: Array<{ id: string; label: string}>;
-}
-type Groups = {
-    groups: Array<Group>;
-};
-
-function SidebarItems({ groups }: Groups) {
+function SidebarItems({ groups }: { groups: Groups }) {
     if (!groups || groups.length === 0) {
         return <div className="flex justify-center h-full text-subtext text-sm">グループがありません</div>;
     }
@@ -90,7 +123,7 @@ function SidebarItems({ groups }: Groups) {
         <div className="w-full">
             <div className="mt-4"></div>{/*空白調整用*/}
             {groups.map((group) => (
-                <TreeItem key={group.groupID} group={group} />
+                <TreeItem key={group.id} group={group} />
             ))}
         </div>
     );
@@ -101,18 +134,18 @@ function TreeItem({ group }: { group: Group }) {
   const [isOpened, setIsOpened] = useState(false);
 
   return (
-    <div className="ml-4 mb-2">
+    <div className="ml-4 mb-1">
         <div
         onClick={() => () => {{/*TODO: 画面遷移 */}}}
-        className="flex items-center"
+        className="flex items-center hover:bg-line rounded-sm overflow-hidden"
         >
             {/* グループの中身を開けるようにする */}
-            <span className="text-primary1 mr-2 text-[10px] select-none" onClick={() => setIsOpened(!isOpened)}>
+            <span className="text-primary1 mr-1 text-[10px] select-none" onClick={() => setIsOpened(!isOpened)}>
                 {isOpened ? "▼" : "▶"}
             </span>
-            <div className="cursor-pointer flex overflow-hidden">
-                <GroupIcon className="w-5 h-5 fill-none mr-2 stroke-subtext stroke-2"></GroupIcon>
-                <p className="overflow-hidden text-ellipsis max-w-[75%] text-1xl">{group.groupName}</p>
+            <div className="cursor-pointer flex overflow-hidden items-center">
+                <GroupIcon className="w-4 h-4 fill-none mr-1 stroke-primary1 stroke-2"></GroupIcon>
+                <p className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.name}</p>
             </div>
         </div>
 
@@ -122,13 +155,13 @@ function TreeItem({ group }: { group: Group }) {
             {/* 学習データがグループに存在する場合表示する */}
             {group.groupDataLabels && group.groupDataLabels.length > 0 ? (
                 group.groupDataLabels.map((label) => (
-                <div key={label.id} className="flex ml-[20px] cursor-pointer">
-                    <ImageIcon className="scale-75 w-6 h-6 fill-none mr-1 stroke-primary1 stroke-2"></ImageIcon>
+                <div key={label.id} className="flex ml-[20px] cursor-pointer border-line border-l items-center hover:bg-line rounded-sm overflow-hidden">
+                    <ImageIcon className="scale-50 w-5 h-5 fill-none mr-1 stroke-subtext stroke-2"></ImageIcon>
                     <div key={label.id} className="overflow-hidden text-ellipsis max-w-[60%] text-sm">{label.label}</div>
                 </div>
                 ))
             ) : (
-                <div className="ml-4 text-subtext text-sm mt-1">学習データがありません</div>
+                <div className="ml-4 text-subtext text-[12px] font-bold mt-1">学習データがありません</div>
             )}
             </>
         )}
@@ -139,7 +172,7 @@ function TreeItem({ group }: { group: Group }) {
 
 function SidebarFooter({ children }: { children: React.ReactNode }) {
     return (
-        <div className="h-auto w-full bg-foreground">
+        <div className="h-auto w-full">
             {children}
         </div>
     );
@@ -147,17 +180,18 @@ function SidebarFooter({ children }: { children: React.ReactNode }) {
 
 function SidebarFooterHead() {
     return (
-        <div className="h-[25px] w-full flex items-left border-line border-b-2">
-            <p className="ml-2 text-1xl text-subtext">User</p>
+        <div className="h-[25px] w-full flex items-left border-line border-b">
+            <p className="ml-1 text-[13px] font-bold text-subtext">User</p>
         </div>
     );
 }
 
 function LogoutContent() {
-    /* TODO: ログアウト処理 */
+    const [isOpen, setOpen] = useState(false);
     return (
         <div className="w-full h-[50px] flex items-center justify-center">
-            <Button className="border-cancel border-2 text-cancel text-sm height-[30px]" onClick={() => {}}>Logout</Button>
+            <LogoutMessage isOpen={isOpen}/>
+            <Button className="border-cancel border text-cancel text-[12px] h-[25px] hover:bg-line" onClick={() => setOpen(true)}>Logout</Button>
         </div>
     );
 }
