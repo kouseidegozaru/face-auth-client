@@ -33,7 +33,7 @@ const FactoryPath = (path: string): GeneratedPath => {
      *
      * @param {string} linkKey - オプションのリンクキー
      */
-    const GeneratedRouter = ({ linkKey }: { linkKey?: string | null }): void => {
+    const GeneratedRouter = ({ linkKey }: { linkKey?: string | null } = {}): void => {
         const router = useRouter();
         const targetPath = linkKey ? `${basePath}/${linkKey}` : basePath;
         router.push(targetPath);
