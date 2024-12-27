@@ -6,6 +6,7 @@ import { Button } from "../_components/buttons";
 import { GetTrainingGroup } from '@/app/_requests/recongnizer'
 import { GetSessionToken } from '@/app/_requests/cookie'
 import { useMessageModal } from '@/app/_components/MessageModal'
+import Loading from '@/app/_components/loading'
 
 
 type Group = { id: string, name: string, updated_at: string };
@@ -14,6 +15,7 @@ type Groups = Group[];
 export default function Sidebar() {
     const { showModal, Modal } = useMessageModal();
     const [groups, setGroups] = useState<Group[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const loadData = async () => {
         // セッショントークンを取得
@@ -35,7 +37,9 @@ export default function Sidebar() {
     }
 
     useEffect(() => {
+        setIsLoading(true);
         loadData();
+        setIsLoading(false);
     }, [])
 
     return (
@@ -46,7 +50,13 @@ export default function Sidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarContentHead />
-                <SidebarItems groups={groups} />{/* TODO: データベースから取得 */}
+                {isLoading ? (
+                    <div className="mt-4">
+                        <Loading disabled={false} />
+                    </div>
+                ):
+                    <SidebarItems groups={groups} />
+                }
             </SidebarContent>
             <SidebarFooter>
                 <SidebarFooterHead />
