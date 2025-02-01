@@ -121,7 +121,7 @@ function GroupList() {
 function GroupCard({ group_id, group_name, updated_at }: { group_id: string, group_name: string, updated_at: string }) {
     const [isEditing, setIsEditing] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group_name);
-    const { showModal } = useMessageModal();
+    const { showModal , Modal } = useMessageModal();
     const inputRef = useRef<HTMLInputElement>(null);
 
     const confirmEdit = async (group_id: string, group_name: string) => {
@@ -194,6 +194,7 @@ function GroupCard({ group_id, group_name, updated_at }: { group_id: string, gro
                     <TrashIcon className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
                 </div>
             </div>
+            <Modal />
         </div>
     )
 }
