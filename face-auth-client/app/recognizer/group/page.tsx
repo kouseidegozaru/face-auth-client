@@ -155,13 +155,18 @@ function GroupCard({ group_id, group_name, updated_at }: { group_id: string, gro
                 // 編集中の場合
                 <div className="flex items-center w-auto">
                     <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
-                    <input type="text" className="font-bold text-[14px] w-[100px]" defaultValue={group_name} />
+                    <input type="text" className="font-bold text-[14px] w-[100px]"
+                        defaultValue={newGroupName}
+                        onChange={(e) => setNewGroupName(e.target.value)}
+                        onBlur={() => confirmEdit(group_id, newGroupName)}
+                        onKeyDown={(e) => e.key === 'Enter' && confirmEdit(group_id, newGroupName)}
+                    />
                 </div>
-            ): (
+            ) : (
                 <GroupDataPage.Link linkKey={group_id}>
                     <div className="flex items-center w-auto">
                         <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
-                        <h2 className="font-bold text-[14px] w-[100px] overflow-hidden text-ellipsis">{group_name}</h2>
+                        <h2 className="font-bold text-[14px] w-[100px] overflow-hidden text-ellipsis">{newGroupName}</h2>
                     </div>
                 </GroupDataPage.Link>
             )}
