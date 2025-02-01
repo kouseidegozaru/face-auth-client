@@ -6,9 +6,10 @@ import TrashIcon from '../../../public/Trash.svg'
 import GroupIcon from '../../../public/Group.svg'
 import { Button } from '@/app/_components/buttons'
 import { GroupDataPage } from '@/app/_links/recognizer'
-import { GetTrainingGroup } from '@/app/_requests/recongnizer'
+import { GetTrainingGroup, UpdateTrainingGroupName } from '@/app/_requests/recongnizer'
 import { useEffect, useState } from 'react'
-import { GetSessionToken } from '@/app/_requests/cookie'
+import { GetSessionToken , SetCsrfToken } from '@/app/_requests/cookie'
+import { getCSRFToken } from '@/app/_requests/accounts'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
 
@@ -119,6 +120,34 @@ function GroupList() {
 
 function GroupCard({ group_id, group_name, updated_at }: { group_id: string, group_name: string, updated_at: string }) {
     const [isEditing, setIsEditing] = useState(false);
+    const [newGroupName, setNewGroupName] = useState(group_name);
+    const { showModal } = useMessageModal();
+
+    const confirmEdit = async (group_id: string, group_name: string) => {
+        // セッショントークンを取得
+        const sessionToken = await GetSessionToken();
+        if (sessionToken == null) {
+            showModal("ログインしてください", "error", 4000);
+            return;
+        }
+        // csrfトークンを取得
+        const csrfToken = await getCSRFToken();
+        if (csrfToken == null) {
+            showModal("グループ名の更新に失敗しました", "error", 4000);
+            return;
+        }
+        // csrfトークンをセット
+        await SetCsrfToken(csrfToken);
+
+        // グループ名を更新
+        const response = await UpdateTrainingGroupName(sessionToken, csrfToken, group_id, group_name);
+        if (!response.ok) {
+            showModal("グループ名の更新に失敗しました", "error", 4000);
+            return;
+        }
+        showModal("グループ名を更新しました", "success", 4000);
+        setIsEditing(false);
+    }
 
     return (
         <div className="w-full h-[40px] min-h-[40px] bg-foreground border-b border-line flex items-center justify-between px-4 flex-0">
