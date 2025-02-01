@@ -7,7 +7,7 @@ import GroupIcon from '../../../public/Group.svg'
 import { Button } from '@/app/_components/buttons'
 import { GroupDataPage } from '@/app/_links/recognizer'
 import { GetTrainingGroup, UpdateTrainingGroupName } from '@/app/_requests/recongnizer'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { GetSessionToken , SetCsrfToken } from '@/app/_requests/cookie'
 import { getCSRFToken } from '@/app/_requests/accounts'
 import { useMessageModal } from '@/app/_components/MessageModal'
@@ -122,6 +122,7 @@ function GroupCard({ group_id, group_name, updated_at }: { group_id: string, gro
     const [isEditing, setIsEditing] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group_name);
     const { showModal } = useMessageModal();
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const confirmEdit = async (group_id: string, group_name: string) => {
         // セッショントークンを取得
@@ -157,6 +158,7 @@ function GroupCard({ group_id, group_name, updated_at }: { group_id: string, gro
                     <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
                     <input type="text" className="font-bold text-[14px] w-[100px]"
                         defaultValue={newGroupName}
+                        ref={inputRef}
                         onChange={(e) => setNewGroupName(e.target.value)}
                         onBlur={() => confirmEdit(group_id, newGroupName)}
                         onKeyDown={(e) => e.key === 'Enter' && confirmEdit(group_id, newGroupName)}
@@ -176,7 +178,17 @@ function GroupCard({ group_id, group_name, updated_at }: { group_id: string, gro
             </div>
             <div className="flex items-center h-full">
                 <div className='h-full w-[40px] flex items-center justify-center text-subtext'>
-                    <EditIcon onClick={() => setIsEditing(true)} className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
+                <EditIcon
+                        onClick={() => {
+                            setIsEditing(true);
+                            setTimeout(() => {
+                                if (inputRef.current) {
+                                    inputRef.current.select(); // テキストボックスを全選択
+                                }
+                            }, 0);
+                        }}
+                        className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer"
+                    />
                 </div>
                 <div className='h-full w-[40px] flex items-center justify-center text-subtext'>
                     <TrashIcon className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
