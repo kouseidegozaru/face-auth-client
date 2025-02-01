@@ -6,9 +6,10 @@ import TrashIcon from '../../../public/Trash.svg'
 import GroupIcon from '../../../public/Group.svg'
 import { Button } from '@/app/_components/buttons'
 import { GroupDataPage } from '@/app/_links/recognizer'
-import { GetTrainingGroup } from '@/app/_requests/recongnizer'
-import { useEffect, useState } from 'react'
-import { GetSessionToken } from '@/app/_requests/cookie'
+import { GetTrainingGroup, UpdateTrainingGroupName } from '@/app/_requests/recongnizer'
+import { useEffect, useState, useRef } from 'react'
+import { GetSessionToken , SetCsrfToken } from '@/app/_requests/cookie'
+import { getCSRFToken } from '@/app/_requests/accounts'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
 
@@ -118,25 +119,82 @@ function GroupList() {
 }
 
 function GroupCard({ group_id, group_name, updated_at }: { group_id: string, group_name: string, updated_at: string }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [newGroupName, setNewGroupName] = useState(group_name);
+    const { showModal , Modal } = useMessageModal();
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const confirmEdit = async (group_id: string, group_name: string) => {
+        // セッショントークンを取得
+        const sessionToken = await GetSessionToken();
+        if (sessionToken == null) {
+            showModal("ログインしてください", "error", 4000);
+            return;
+        }
+        // csrfトークンを取得
+        const csrfToken = await getCSRFToken();
+        if (csrfToken == null) {
+            showModal("グループ名の更新に失敗しました", "error", 4000);
+            return;
+        }
+        // csrfトークンをセット
+        await SetCsrfToken(csrfToken);
+
+        // グループ名を更新
+        const response = await UpdateTrainingGroupName(sessionToken, csrfToken, group_id, group_name);
+        if (!response.ok) {
+            showModal("グループ名の更新に失敗しました", "error", 4000);
+            return;
+        }
+        showModal("グループ名を更新しました", "success", 4000);
+        setIsEditing(false);
+    }
+
     return (
         <div className="w-full h-[40px] min-h-[40px] bg-foreground border-b border-line flex items-center justify-between px-4 flex-0">
-            <GroupDataPage.Link linkKey={group_id}>
-                <div className="flex items-center">
+            {isEditing ? (
+                // 編集中の場合
+                <div className="flex items-center w-auto">
                     <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
-                    <h2 className="font-bold text-[14px]">{group_name}</h2>
+                    <input type="text" className="font-bold text-[14px] w-[100px]"
+                        defaultValue={newGroupName}
+                        ref={inputRef}
+                        onChange={(e) => setNewGroupName(e.target.value)}
+                        onBlur={() => confirmEdit(group_id, newGroupName)}
+                        onKeyDown={(e) => e.key === 'Enter' && confirmEdit(group_id, newGroupName)}
+                    />
                 </div>
-            </GroupDataPage.Link>
+            ) : (
+                <GroupDataPage.Link linkKey={group_id}>
+                    <div className="flex items-center w-auto">
+                        <GroupIcon className="w-4 h-4 mr-2 fill-none stroke-primary1 stroke-2" />
+                        <h2 className="font-bold text-[14px] w-[100px] overflow-hidden text-ellipsis">{newGroupName}</h2>
+                    </div>
+                </GroupDataPage.Link>
+            )}
+
             <div className="flex items-center">
                 <p className="text-[13px] text-subtext">{updated_at}</p>
             </div>
             <div className="flex items-center h-full">
                 <div className='h-full w-[40px] flex items-center justify-center text-subtext'>
-                    <EditIcon className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
+                <EditIcon
+                        onClick={() => {
+                            setIsEditing(true);
+                            setTimeout(() => {
+                                if (inputRef.current) {
+                                    inputRef.current.select(); // テキストボックスを全選択
+                                }
+                            }, 0);
+                        }}
+                        className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer"
+                    />
                 </div>
                 <div className='h-full w-[40px] flex items-center justify-center text-subtext'>
                     <TrashIcon className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
                 </div>
             </div>
+            <Modal />
         </div>
     )
 }
