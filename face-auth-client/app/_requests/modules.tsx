@@ -1,4 +1,5 @@
 import { GetSessionToken, SetCsrfToken } from './cookie';
+import { getCSRFToken } from './accounts';
 
 class BaseError extends Error {
     status: number;
@@ -19,6 +20,15 @@ class SessionError extends BaseError {
     }
 }
 
+/**
+ * CSRFトークンエラー
+ */
+class CsrfTokenError extends BaseError {
+    constructor(message = "CSRF token is missing") {
+        super(message, 400);
+    }
+}
+
 type HeadersType = Record<string, string>;
 
 // セッショントークンを使用するオプション関数
@@ -28,6 +38,16 @@ async function useSessionToken(headers: HeadersType): Promise<void> {
         throw new SessionError();
     }
     headers['Authorization'] = `Token ${sessionToken}`;
+}
+
+// CSRFトークンを使用するオプション関数
+async function useCsrfToken(headers: HeadersType): Promise<void> {
+    const csrfToken = await getCSRFToken();
+    if (!csrfToken) {
+        throw new CsrfTokenError();
+    }
+    SetCsrfToken(csrfToken);
+    headers['X-CSRFToken'] = csrfToken;
 }
 
 // 任意のヘッダーを追加する関数
