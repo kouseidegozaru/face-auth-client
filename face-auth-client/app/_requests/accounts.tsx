@@ -1,44 +1,11 @@
 // usersエンドポイントへAPIリクエストを行う
 'use cilient'
 
+import { baseRequest, useSessionToken} from "./modules";
+
 // APIベースURL
 const API_BASE_URL = process.env.API_BASE_URL
 const API_ROOT_URL = `${API_BASE_URL}/users`
-
-// APIリクエストを行う共通の関数
-async function requestApi(endpoint: string, method: string, body: object | null, token: string | null = null): Promise<Response> {
-    
-    // リクエストヘッダー
-    const headers: Record<string, string> = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    };
-
-    // 認証トークンをヘッダーに追加
-    if (token) {
-        headers['Authorization'] = `Token ${token}`;
-    }
-
-    // リクエストオブジェクト
-    const request : RequestInit = {
-        method: method,
-        headers: headers
-    }
-
-    // メソッドがPOSTの場合、bodyを追加
-    if (method === 'POST') {
-        request.body = JSON.stringify(body);
-    }
-
-    try {
-        // APIリクエスト
-        const response = await fetch(`${API_ROOT_URL}${endpoint}`, request);
-        return response
-    } catch (error) {
-        console.error('API request failed:', error);
-        throw error;
-    }
-}
 
 // ユーザー登録
 export async function registerUser(
