@@ -63,8 +63,8 @@ export async function confirmPasswordReset(
 }
 
 // ログイン中のユーザー情報取得
-export async function getUser(sessionToken: string) {
-    return requestApi('/user/', 'GET', {}, sessionToken);
+export async function getUser() {
+    return baseRequest(`${API_ROOT_URL}/user/`, 'GET', {}, [useSessionToken]);
 }
 
 // csrfトークンの発行
