@@ -24,7 +24,7 @@ export async function registerUser(
 
 // 登録メール認証
 export async function verifyRegistrationEmail(token: string) {
-    return requestApi('/registration/verify-email/', 'POST', { key: token });
+    return baseRequest(`${API_ROOT_URL}/registration/verify-email/`, 'POST', { key: token });
 }
 
 // 登録メール再送
