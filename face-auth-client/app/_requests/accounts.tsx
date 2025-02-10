@@ -44,7 +44,7 @@ export async function logoutUser() {
 
 // パスワードリセットメール送信
 export async function sendPasswordResetEmail(email: string) {
-    return requestApi('/password/reset/', 'POST', { email });
+    return baseRequest(`${API_ROOT_URL}/password/reset/`, 'POST', { email });
 }
 
 // パスワードリセット
