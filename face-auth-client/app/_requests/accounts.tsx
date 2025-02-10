@@ -34,7 +34,7 @@ export async function resendRegistrationEmail(email: string) {
 
 // ログイン
 export async function loginUser(email: string, password: string) {
-    return requestApi('/login/', 'POST', { email, password });
+    return baseRequest(`${API_ROOT_URL}/login/`, 'POST', { email, password });
 }
 
 // ログアウト
