@@ -14,7 +14,7 @@ export async function registerUser(
     password1: string,
     password2: string
 ) {
-    return requestApi('/registration/', 'POST', {
+    return baseRequest(`${API_ROOT_URL}/registration/`, 'POST', {
         name: username,
         email,
         password1,
