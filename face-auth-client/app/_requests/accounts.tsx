@@ -38,8 +38,8 @@ export async function loginUser(email: string, password: string) {
 }
 
 // ログアウト
-export async function logoutUser(sessionToken: string) {
-    return requestApi('/logout/', 'POST', {}, sessionToken);
+export async function logoutUser() {
+    return baseRequest(`${API_ROOT_URL}/logout/`, 'POST', {}, [useSessionToken]);
 }
 
 // パスワードリセットメール送信
