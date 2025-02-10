@@ -29,7 +29,7 @@ export async function verifyRegistrationEmail(token: string) {
 
 // 登録メール再送
 export async function resendRegistrationEmail(email: string) {
-    return requestApi('/registration/resend-email/', 'POST', { email });
+    return baseRequest(`${API_ROOT_URL}/registration/resend-email/`, 'POST', { email });
 }
 
 // ログイン
