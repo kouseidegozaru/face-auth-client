@@ -69,7 +69,7 @@ export async function getUser() {
 
 // csrfトークンの発行
 export async function getCSRFToken() : Promise<string | null> {
-    const response = await requestApi('/csrf-token/', 'GET', {});
+    const response = await baseRequest(`${API_ROOT_URL}/csrf-token/`, 'GET', {});
     const data = await response.json();
     const { csrfToken } = data;
     return csrfToken
