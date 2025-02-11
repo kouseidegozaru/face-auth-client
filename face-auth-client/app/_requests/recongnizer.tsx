@@ -41,11 +41,11 @@ export async function CreateTrainingData(groupId: string, label: string, image: 
 }
 
 // 学習データの更新
-export async function UpdateTrainingData(sessionToken: string, csrfToken: string, id: string, label: string, image: File) {
+export async function UpdateTrainingData(id: string, label: string, image: File) {
     const formData = new FormData();
     formData.append('image', image);
     formData.append('label', label);
-    return requestApi(`/training-data/${id}/`, 'PATCH', formData, sessionToken, csrfToken);
+    return baseRequest(`${API_ROOT_URL}/training-data/${id}/`, 'PATCH', formData, [useSessionToken, useCsrfToken]);
 }
 
 // 学習データの削除
