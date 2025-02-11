@@ -59,8 +59,8 @@ export async function Train(groupId: string) {
 }
 
 // 推論
-export async function Predict(sessionToken: string, csrfToken: string, image: File) {
+export async function Predict(image: File) {
     const formData = new FormData();
     formData.append('image', image);
-    return requestApi('/predict/', 'POST', formData, sessionToken, csrfToken);
+    return baseRequest(`${API_ROOT_URL}/predict/`, 'POST', formData, [useSessionToken, useCsrfToken]);
 }
