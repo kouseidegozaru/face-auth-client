@@ -8,8 +8,8 @@ const API_BASE_URL = process.env.API_BASE_URL
 const API_ROOT_URL = `${API_BASE_URL}/recognizer`
 
 // グループ一覧の取得
-export async function GetTrainingGroup(sessionToken: string) {
-    return requestApi('/training-groups/', 'GET', null, sessionToken);
+export async function GetTrainingGroup() {
+    return baseRequest(`${API_ROOT_URL}/training-groups/`, 'GET', null, [useSessionToken]);
 }
 
 // グループの作成

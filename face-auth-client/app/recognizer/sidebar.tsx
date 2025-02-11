@@ -4,7 +4,7 @@ import ImageIcon from "../../public/Image.svg";
 import { useState,useEffect } from "react";
 import { Button } from "../_components/buttons";
 import { GetTrainingGroup } from '@/app/_requests/recongnizer'
-import { GetSessionToken } from '@/app/_requests/cookie'
+import { SessionError } from "../_requests/modules"
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
 import LogoutMessage from '@/app/accounts/logout/message'
@@ -19,22 +19,26 @@ export default function Sidebar() {
     const [isLoading, setIsLoading] = useState(true);
 
     const loadData = async () => {
-        // セッショントークンを取得
-        const sessionToken = await GetSessionToken();
-        if (sessionToken == null) {
-            showModal("ログインしてください", "error", 4000);
-            return;
-        }
-        // グループ一覧を取得
-        const response = await GetTrainingGroup(sessionToken);
-        if (!response.ok) {
-            showModal("グループの取得に失敗しました", "error", 4000);
-            return;
-        }
+        try {
+            // グループ一覧を取得
+            const response = await GetTrainingGroup();
+            if (!response.ok) {
+                showModal("グループの取得に失敗しました", "error", 4000);
+                return;
+            }
 
-        // グループ一覧をセット
-        const data: Groups = await response.json();
-        setGroups(data);
+            // グループ一覧をセット
+            const data: Groups = await response.json();
+            setGroups(data);
+
+        } catch (e) {
+            // セッショントークンエラー
+            if (e instanceof SessionError) {
+                showModal("ログインしてください", "error", 4000);
+            } else {
+                showModal("グループの取得に失敗しました", "error", 4000);
+            }
+        }
     }
 
     useEffect(() => {
