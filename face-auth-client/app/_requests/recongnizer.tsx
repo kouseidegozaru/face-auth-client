@@ -13,8 +13,8 @@ export async function GetTrainingGroup() {
 }
 
 // グループの作成
-export async function CreateTrainingGroup(sessionToken: string, csrfToken: string, name: string) {
-    return requestApi('/training-groups/', 'POST', { name }, sessionToken, csrfToken);
+export async function CreateTrainingGroup(name: string) {
+    return baseRequest(`${API_ROOT_URL}/training-groups/`, 'POST', { name }, [useSessionToken, useCsrfToken]);
 }
 
 // グループ名の更新
