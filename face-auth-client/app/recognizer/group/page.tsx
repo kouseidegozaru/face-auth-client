@@ -7,9 +7,8 @@ import GroupIcon from '../../../public/Group.svg'
 import { Button } from '@/app/_components/buttons'
 import { GroupDataPage } from '@/app/_links/recognizer'
 import { GetTrainingGroup, UpdateTrainingGroupName } from '@/app/_requests/recongnizer'
+import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useEffect, useState, useRef } from 'react'
-import { GetSessionToken , SetCsrfToken } from '@/app/_requests/cookie'
-import { getCSRFToken } from '@/app/_requests/accounts'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
 
@@ -65,22 +64,25 @@ function GroupList() {
     const [isLoading, setIsLoading] = useState(true);
 
     const loadData = async () => {
-        // セッショントークンを取得
-        const sessionToken = await GetSessionToken();
-        if (sessionToken == null) {
-            showModal("ログインしてください", "error", 4000);
-            return;
-        }
-        // グループ一覧を取得
-        const response = await GetTrainingGroup(sessionToken);
-        if (!response.ok) {
-            showModal("グループの取得に失敗しました", "error", 4000);
-            return;
-        }
+        try {
+            // グループ一覧を取得
+            const response = await GetTrainingGroup();
+            if (!response.ok) {
+                showModal("グループの取得に失敗しました", "error", 4000);
+                return;
+            }
 
-        // グループ一覧をセット
-        const data: Group[] = await response.json();
-        setGroups(data);
+            // グループ一覧をセット
+            const data: Group[] = await response.json();
+            setGroups(data);
+            
+        } catch (e) {
+            if (e instanceof SessionError) {
+                showModal("ログインしてください", "error", 4000);
+            } else {
+                showModal("グループの取得に失敗しました", "error", 4000);
+            }
+        }
     }
 
     useEffect(() => {
@@ -125,29 +127,25 @@ function GroupCard({ group_id, group_name, updated_at }: { group_id: string, gro
     const inputRef = useRef<HTMLInputElement>(null);
 
     const confirmEdit = async (group_id: string, group_name: string) => {
-        // セッショントークンを取得
-        const sessionToken = await GetSessionToken();
-        if (sessionToken == null) {
-            showModal("ログインしてください", "error", 4000);
-            return;
+        try {
+            // グループ名を更新
+            const response = await UpdateTrainingGroupName(group_id, group_name);
+            if (!response.ok) {
+                showModal("グループ名の更新に失敗しました", "error", 4000);
+                return;
+            }
+            showModal("グループ名を更新しました", "success", 4000);
+            setIsEditing(false);
+            
+        } catch (e) {
+            if (e instanceof SessionError) {
+                showModal("ログインしてください", "error", 4000);
+            } else if (e instanceof CsrfTokenError) {
+                showModal("セッションが切れました", "error", 4000);
+            } else {
+                showModal("グループ名の更新に失敗しました", "error", 4000);
+            }
         }
-        // csrfトークンを取得
-        const csrfToken = await getCSRFToken();
-        if (csrfToken == null) {
-            showModal("グループ名の更新に失敗しました", "error", 4000);
-            return;
-        }
-        // csrfトークンをセット
-        await SetCsrfToken(csrfToken);
-
-        // グループ名を更新
-        const response = await UpdateTrainingGroupName(sessionToken, csrfToken, group_id, group_name);
-        if (!response.ok) {
-            showModal("グループ名の更新に失敗しました", "error", 4000);
-            return;
-        }
-        showModal("グループ名を更新しました", "success", 4000);
-        setIsEditing(false);
     }
 
     return (

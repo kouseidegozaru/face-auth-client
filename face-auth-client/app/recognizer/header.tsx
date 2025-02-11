@@ -51,16 +51,14 @@ const UserNameDisplay = ({ children }: { children: React.ReactNode }) => {// TOD
 const UserProfile = ({ children }: { children: React.ReactNode }) => {
     const [userName, setUserName] = useState("User");
     const loadUser = async () => {
-        //セッショントークンの取得
-        const sessionToken = await GetSessionToken();
-        if (sessionToken == null) {
+        try {
+            const response = await getUser();
+            const { email } = await response.json();
+            setUserName(email);
+        } catch (error) {
             setUserName("Guest");
-            return;
+            return
         }
-        // ユーザー情報の取得
-        const response = await getUser(sessionToken);
-        const { email } = await response.json();
-        setUserName(email);
     }
 
     useEffect(() => {
