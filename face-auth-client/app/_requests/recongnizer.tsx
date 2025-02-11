@@ -23,8 +23,8 @@ export async function UpdateTrainingGroupName(id: string, name: string) {
 }
 
 // グループの削除
-export async function DeleteTrainingGroup(sessionToken: string, csrfToken: string, id: string) {
-    return requestApi(`/training-groups/${id}/`, 'DELETE', null, sessionToken, csrfToken);
+export async function DeleteTrainingGroup(id: string) {
+    return baseRequest(`${API_ROOT_URL}/training-groups/${id}/`, 'DELETE', null, [useSessionToken, useCsrfToken]);
 }
 
 // 学習データの取得
