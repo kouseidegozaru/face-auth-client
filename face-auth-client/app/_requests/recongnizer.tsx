@@ -18,8 +18,8 @@ export async function CreateTrainingGroup(name: string) {
 }
 
 // グループ名の更新
-export async function UpdateTrainingGroupName(sessionToken: string, csrfToken: string, id: string, name: string) {
-    return requestApi(`/training-groups/${id}/`, 'PATCH', { name }, sessionToken, csrfToken);
+export async function UpdateTrainingGroupName(id: string, name: string) {
+    return baseRequest(`${API_ROOT_URL}/training-groups/${id}/`, 'PATCH', { name }, [useSessionToken, useCsrfToken]);
 }
 
 // グループの削除
