@@ -33,11 +33,11 @@ export async function GetTrainingData(groupId: string) {
 }
 
 // 学習データの作成
-export async function CreateTrainingData(sessionToken: string, csrfToken: string, groupId: string, label: string, image: File) {
+export async function CreateTrainingData(groupId: string, label: string, image: File) {
     const formData = new FormData();
     formData.append('image', image);
     formData.append('label', label);
-    return requestApi(`/training-groups/${groupId}/images/`, 'POST', formData, sessionToken, csrfToken);
+    return baseRequest(`${API_ROOT_URL}/training-groups/${groupId}/images/`, 'POST', formData, [useSessionToken, useCsrfToken]);
 }
 
 // 学習データの更新
