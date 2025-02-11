@@ -49,8 +49,8 @@ export async function UpdateTrainingData(id: string, label: string, image: File)
 }
 
 // 学習データの削除
-export async function DeleteTrainingData(sessionToken: string, csrfToken: string, id: string) {
-    return requestApi(`/training-data/${id}/`, 'DELETE', null, sessionToken, csrfToken);
+export async function DeleteTrainingData(id: string) {
+    return baseRequest(`${API_ROOT_URL}/training-data/${id}/`, 'DELETE', null, [useSessionToken, useCsrfToken]);
 }
 
 // 学習データの学習
