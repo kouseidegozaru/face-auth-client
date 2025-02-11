@@ -28,8 +28,8 @@ export async function DeleteTrainingGroup(id: string) {
 }
 
 // 学習データの取得
-export async function GetTrainingData(sessionToken: string, groupId: string) {
-    return requestApi(`/training-groups/${groupId}/images/`, 'GET', null, sessionToken);
+export async function GetTrainingData(groupId: string) {
+    return baseRequest(`${API_ROOT_URL}/training-groups/${groupId}/images/`, 'GET', null, [useSessionToken]);
 }
 
 // 学習データの作成
