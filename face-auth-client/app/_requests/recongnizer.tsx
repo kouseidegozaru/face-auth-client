@@ -54,8 +54,8 @@ export async function DeleteTrainingData(id: string) {
 }
 
 // 学習データの学習
-export async function Train(sessionToken: string, csrfToken: string, groupId: string) {
-    return requestApi(`/train/${groupId}/`, 'POST', null, sessionToken, csrfToken);
+export async function Train(groupId: string) {
+    return baseRequest(`${API_ROOT_URL}/train/${groupId}/`, 'POST', null, [useSessionToken, useCsrfToken]);
 }
 
 // 推論
