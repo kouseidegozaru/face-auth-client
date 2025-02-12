@@ -11,6 +11,7 @@ import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useEffect, useState, useRef } from 'react'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
+import GroupRegisterMessage from './register/message'
 
 export default function Page() {
     return (
@@ -44,8 +45,13 @@ function HeaderTitle() {
 }
 
 function RegisterButton() {
+    const [ isOpen , setIsOpen ] = useState(false)
+
     return (
-        <Button className="w-[80px] h-6 mr-4 text-[11px] bg-primary1 hover:bg-primary1_hover text-foreground border-line">新規作成</Button>
+        <>
+            <GroupRegisterMessage isOpen={isOpen} closeButtonEvent={() => setIsOpen(false)} />
+            <Button onClick={() => setIsOpen(true)} className="w-[80px] h-6 mr-4 text-[11px] bg-primary1 hover:bg-primary1_hover text-foreground border-line">新規作成</Button>
+        </>
     )
 }
 
