@@ -23,7 +23,7 @@ const MessageModal: React.FC<MessageModalProps> = ({ message, type, onClose, isF
 
   return (
     <div
-      className={`fixed bottom-4 transform flex items-center justify-between
+      className={`fixed bottom-4 left-[10vw] transform flex items-center justify-between
       p-4 border rounded shadow-md z-[1002] w-[80vw] m-4 text-center ${typeStyles[type]} 
       ${isFadeout ? "fade-out" : ""}
       ${isFadein ? "fade-in" : ""}`
