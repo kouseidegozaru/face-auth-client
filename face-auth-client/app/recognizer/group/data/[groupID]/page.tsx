@@ -85,7 +85,7 @@ function ContentContainer({ children }: { children: React.ReactNode }) {
 function DataList(){
 
     return (
-        <div className="w-full h-full flex flex-wrap flex-0 overflow-y-auto justify-center my-3">
+        <div className="w-full h-full flex flex-wrap flex-0 overflow-y-auto justify-center pt-3">
             {[1,2,3,4,5,6,7,8,9,10].map((_, i) => <DataCard key={i} />)}
         </div>
     )
