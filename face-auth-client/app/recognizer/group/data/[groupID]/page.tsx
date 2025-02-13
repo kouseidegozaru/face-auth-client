@@ -17,7 +17,7 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
                 </ButtonContainer>
             </HeaderContainer>
             <ContentContainer>
-                
+                <DataList />
             </ContentContainer>
         </>
     )
@@ -78,6 +78,23 @@ function ContentContainer({ children }: { children: React.ReactNode }) {
     return (
         <div className="w-full h-[calc(100%-40px)] flex flex-col justify-center bg-foreground overflow-y-hidden">
             {children}
+        </div>
+    )
+}
+
+function DataList(){
+
+    return (
+        <div className="w-full h-full flex flex-wrap flex-0 overflow-y-auto justify-center my-3">
+            {[1,2,3,4,5,6,7,8,9,10].map((_, i) => <DataCard key={i} />)}
+        </div>
+    )
+}
+
+function DataCard() {
+    return (
+        <div className='w-[400px] h-[200px] min-h-[200px] border border-line m-3 rounded-lg'>
+            
         </div>
     )
 }
