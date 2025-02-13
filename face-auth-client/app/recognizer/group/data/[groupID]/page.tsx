@@ -10,7 +10,11 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
         <>
             <HeaderContainer>
                 <HeaderTitle />
-                <RegisterButton />
+                <ButtonContainer>
+                    <LearningButton />
+                    <PredictButton />
+                    <RegisterButton />
+                </ButtonContainer>
             </HeaderContainer>
             <ContentContainer>
                 
@@ -36,11 +40,36 @@ function HeaderTitle() {
     )
 }
 
+function ButtonContainer({ children }: { children: React.ReactNode }) {
+    return (
+        <div className="flex items-center justify-between w-[300px] h-full">
+            {children}
+        </div>
+    )
+}
+
 function RegisterButton() {
 
     return (
         <>
             <Button className="w-[80px] h-6 mr-4 text-[11px] bg-primary1 hover:bg-primary1_hover text-foreground border-line">新規作成</Button>
+        </>
+    )
+}
+
+function LearningButton() {
+
+    return (
+        <>
+            <Button className="w-[80px] h-6 mr-4 text-[11px] bg-primary2 hover:bg-primary2_hover text-foreground border-line">学習</Button>
+        </>
+    )
+}
+function PredictButton() {
+
+    return (
+        <>
+            <Button className="w-[80px] h-6 mr-4 text-[11px] bg-primary2 hover:bg-primary2_hover text-foreground border-line">予測</Button>
         </>
     )
 }
