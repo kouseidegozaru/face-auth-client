@@ -30,7 +30,7 @@ export default function Page() {
 
 function HeaderContainer({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex items-center justify-between w-full h-[40px] bg-foreground border-b border-line">
+        <div className="flex items-center justify-between w-full h-[40px] bg-foreground border-b-2 border-line">
             {children}
         </div>
     )
