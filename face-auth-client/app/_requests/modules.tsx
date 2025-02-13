@@ -46,7 +46,7 @@ async function useCsrfToken(headers: HeadersType): Promise<void> {
     if (!csrfToken) {
         throw new CsrfTokenError();
     }
-    SetCsrfToken(csrfToken);
+    await SetCsrfToken(csrfToken);
     headers['X-CSRFToken'] = csrfToken;
 }
 

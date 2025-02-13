@@ -6,7 +6,7 @@ function InputFactory({ isPassword } : { isPassword : boolean}){
         }
         return (
             <div className="w-[350px] h-auto bg-foreground">
-                <p className="text-[11px] text-subtext ml-2 mb-1 font-bold">{label}</p>
+                <p className="text-[11px] text-subtext ml-2 mb-1 font-bold flex item-left">{label}</p>
                 <input 
                     type={isPassword ? "password":"text"}
                     value={inputValue} 
