@@ -12,6 +12,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
 import GroupRegisterMessage from './register/message'
+import GroupDeleteMessage from './delete/message'
 
 export default function Page() {
     return (
@@ -29,7 +30,7 @@ export default function Page() {
 
 function HeaderContainer({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex items-center justify-between w-full h-[40px] bg-foreground border-b border-line">
+        <div className="flex items-center justify-between w-full h-[40px] bg-foreground border-b-2 border-line">
             {children}
         </div>
     )
@@ -128,6 +129,7 @@ function GroupList() {
 
 function GroupCard({ group_id, group_name, updated_at }: { group_id: string, group_name: string, updated_at: string }) {
     const [isEditing, setIsEditing] = useState(false);
+    const [isShowDeleteMessage, setIsShowDeleteMessage] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group_name);
     const { showModal , Modal } = useMessageModal();
     const inputRef = useRef<HTMLInputElement>(null);
@@ -195,7 +197,8 @@ function GroupCard({ group_id, group_name, updated_at }: { group_id: string, gro
                     />
                 </div>
                 <div className='h-full w-[40px] flex items-center justify-center text-subtext'>
-                    <TrashIcon className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
+                    <TrashIcon onClick={() => setIsShowDeleteMessage(true)} className="w-4 h-4 fill-none stroke-subtext stroke-2 hover:fill-line cursor-pointer" />
+                    <GroupDeleteMessage isOpen={isShowDeleteMessage} closeButtonEvent={() => setIsShowDeleteMessage(false)} group_id={group_id} group_name={group_name} />
                 </div>
             </div>
             <Modal />
