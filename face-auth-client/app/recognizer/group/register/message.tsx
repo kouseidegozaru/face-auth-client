@@ -6,11 +6,13 @@ import { CreateTrainingGroup } from '@/app/_requests/recongnizer'
 import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import { GroupPage } from '@/app/_links/recognizer'
+import Loading from '@/app/_components/loading'
 
 export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { isOpen: boolean , closeButtonEvent: () => void }) {
     const [name, setName] = useState("")
     const [errors, setErrors] : any = useState({})
     const { showModal, Modal } = useMessageModal()
+    const [loading, setLoading] = useState(false)
 
     // バリデーション
     const validate = (value) => {
@@ -37,27 +39,40 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { is
                             setInputValue={(value) => { setName(value); validate(value) }}
                             errorMessage={errors.name}
                             />
-                        <Button className="w-[90px] h-[45px] m-[30px] bg-primary2 hover:bg-primary2_hover text-foreground"
-                                onClick={async () => {
-                                    if (Object.keys(errors).length === 0 && name) {
-                                        try {
-                                            const response = await CreateTrainingGroup(name)
-                                            if (response.ok) {
-                                                setName("")
-                                                GroupPage.Redirect()
-                                            }
-                                        } catch (e) {
-                                            if (e instanceof SessionError) {
-                                                showModal("ログインしてください", "error", 4000)
-                                            } else if (e instanceof CsrfTokenError) {
-                                                showModal("グループの作成に失敗しました", "error", 4000)
-                                            } else {
-                                                showModal("グループの作成に失敗しました", "error", 4000)
+                        {!loading ? (
+                            <Button className="w-[90px] h-[45px] m-[30px] bg-primary2 hover:bg-primary2_hover text-foreground"
+                                    onClick={async () => {
+                                        if (Object.keys(errors).length === 0 && name) {
+                                            // ローディング開始
+                                            setLoading(true)
+                                            try {
+                                                const response = await CreateTrainingGroup(name)
+                                                if (response.ok) {
+                                                    setName("")
+                                                    GroupPage.Redirect()
+                                                }
+                                            } catch (e) {
+                                                if (e instanceof SessionError) {
+                                                    showModal("ログインしてください", "error", 4000)
+                                                } else if (e instanceof CsrfTokenError) {
+                                                    showModal("グループの作成に失敗しました", "error", 4000)
+                                                } else {
+                                                    showModal("グループの作成に失敗しました", "error", 4000)
+                                                }
+                                            } finally {
+                                                // ローディング終了
+                                                setLoading(false)
                                             }
                                         }
-                                    }
-                                }}>作成</Button>
+                                    }}>
+                                作成
+                            </Button>
+                        ) : (
+                            <div className='m-[33px]'>
+                                <Loading disabled={!loading}/>
                             </div>
+                        )}
+                    </div>
                 </Message>
             </OpenChildren>
             <Modal />
