@@ -13,6 +13,7 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent , group
     const [errors, setErrors] : any = useState({})
     const { showModal, Modal } = useMessageModal()
     const [loading, setLoading] = useState(false)
+    const [image, setImage] = useState<File | null>(null)
 
     // バリデーション
     const validate = (value) => {
@@ -33,6 +34,11 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent , group
                 <Message closeButtonEvent={closeButtonEvent}>
                     <div className='h-full w-full flex items-center flex-col justify-center'>
                         <p className="m-[30px] text-sm font-bold">新規データを登録します</p>
+                        <ImageContainer>
+                            <FileInputButton setImage={setImage}/>
+                            {image ? <ImagePreview image={image} /> : null}
+                        </ImageContainer>
+
                         <UserInput
                             label="ラベル名"
                             inputValue={name}
@@ -42,14 +48,16 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent , group
                         {!loading ? (
                             <Button className="w-[90px] h-[45px] m-[30px] bg-primary2 hover:bg-primary2_hover text-foreground"
                                     onClick={async () => {
-                                        if (Object.keys(errors).length === 0 && name) {
+                                        if (Object.keys(errors).length === 0 && image && name) {
                                             // ローディング開始
                                             setLoading(true)
                                             try {
-                                                const response = await CreateTrainingData(group_id, name)
+                                                const response = await CreateTrainingData(group_id, name, image)
                                                 if (response.ok) {
                                                     setName("")
                                                     GroupDataPage.Redirect({linkKey: group_id})
+                                                } else {
+                                                    showModal("データの登録に失敗しました", "error", 4000)
                                                 }
                                             } catch (e) {
                                                 if (e instanceof SessionError) {
@@ -77,5 +85,40 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent , group
             </OpenChildren>
             <Modal />
         </>
+    )
+}
+
+const ImageContainer = ({ children }) => {
+    return (
+        <div className="w-[350px] h-[140px] flex flex-col mb-2">
+            <p className="text-[11px] text-subtext ml-4 mb-1 font-bold flex item-left">画像</p>
+            <div className="relative w-full h-[120px] flex justify-evenly items-center border-2 border-dashed border-line rounded-lg cursor-pointer hover:border-subtext">
+                {children}
+            </div>
+        </div>
+    )
+}
+
+const FileInputButton = ({ setImage }) => {
+    const handleChange = (e) => {
+        const file = e.target.files[0]
+        if (file) {
+            setImage(URL.createObjectURL(file))
+        }
+    }
+
+    return (
+        <>
+            <input type="file" accept="image/*" onChange={handleChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"/>
+            <span className="text-subtext">画像を選択</span>
+        </>
+    )
+}
+
+const ImagePreview = ({ image : image}) => {
+    return (
+        <div className='w-[100px] h-[100px] flex justify-center items-center border-2 border-dashed border-line rounded'>
+            <img src={image} alt="preview" className="w-[90px] h-[90px] object-cover" />
+        </div>
     )
 }
