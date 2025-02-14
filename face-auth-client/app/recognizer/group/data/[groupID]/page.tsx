@@ -9,6 +9,7 @@ import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useState , useEffect, use } from 'react'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import { getImage } from '@/app/_requests/media'
+import Loading from '@/app/_components/loading'
 
 type GroupData = {
     id: string,
@@ -23,6 +24,7 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
     const { groupID } = use(params)
     const { showModal, Modal } = useMessageModal()
     const [groupDataList, setGroupDataList] = useState<GroupDataList>([])
+    const [loading, setLoading] = useState<boolean>(true)
 
     const loadTrainingData = async () => {
         try {
@@ -46,8 +48,10 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
     }
 
     useEffect(() => {
-        loadTrainingData();
+        setLoading(true);
+        loadTrainingData().then(() => setLoading(false));
     }, [groupID])
+
     return (
         <>
             <HeaderContainer>
@@ -59,7 +63,13 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
                 </ButtonContainer>
             </HeaderContainer>
             <ContentContainer>
-                <DataList groupDataList={groupDataList}/>
+                {loading  ? (
+                    <div className='w-full h-full flex justify-center items-center'>
+                        <Loading disabled={!loading}/>
+                    </div>
+                ) : (
+                    <DataList groupDataList={groupDataList}/>
+                )}
             </ContentContainer>
             <Modal />
         </>
