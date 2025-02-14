@@ -10,6 +10,7 @@ import { useState , useEffect, use } from 'react'
 import { useMessageModal } from '@/app/_components/MessageModal'
 import { getImage } from '@/app/_requests/media'
 import Loading from '@/app/_components/loading'
+import GroupRegisterMessage from '@/app/recognizer/group/data/register/message'
 
 type GroupData = {
     id: string,
@@ -59,7 +60,7 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
                 <ButtonContainer>
                     <LearningButton />
                     <PredictButton />
-                    <RegisterButton />
+                    <RegisterButton group_id={groupID}/>
                 </ButtonContainer>
             </HeaderContainer>
             <ContentContainer>
@@ -101,11 +102,12 @@ function ButtonContainer({ children }: { children: React.ReactNode }) {
     )
 }
 
-function RegisterButton() {
-
+function RegisterButton({ group_id }: { group_id: string }) {
+    const [ isOpen , setIsOpen ] = useState(false)
     return (
         <>
-            <Button className="w-[80px] h-6 mr-4 text-[11px] bg-primary1 hover:bg-primary1_hover text-foreground border-line">新規作成</Button>
+            <GroupRegisterMessage isOpen={isOpen} closeButtonEvent={() => setIsOpen(false)} group_id={group_id}/>
+            <Button onClick={() => setIsOpen(true)} className="w-[80px] h-6 mr-4 text-[11px] bg-primary1 hover:bg-primary1_hover text-foreground border-line">新規作成</Button>
         </>
     )
 }
