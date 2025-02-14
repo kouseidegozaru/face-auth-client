@@ -93,8 +93,21 @@ function DataList(){
 
 function DataCard() {
     return (
-        <div className='w-[400px] h-[200px] min-h-[200px] border border-line m-3 rounded-lg'>
-            
+        <div className='w-[400px] h-[200px] min-h-[200px] border border-line m-3 rounded-lg flex overflow-hidden'>
+
+            <div className='w-[50%] h-full flex flex-col justify-between'>
+                <div>
+                    <h1 className='text-lg font-bold text-text ml-3 mt-3 overflow-hidden text-ellipsis'>groupnameaaaaaaaaaaaaaaaaaaaaaaaaa</h1>
+                    <p className='text-sm text-subtext ml-3'>2021/09/01 12:00</p>
+                </div>
+                <div className='flex justify-start'>
+                    <EditIcon className='w-4 h-4 m-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
+                    <TrashIcon className='w-4 h-4 my-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
+                </div>
+            </div>
+            <div className='w-[50%] h-full'>
+                <img src="https://source.unsplash.com/random/400x200" className='w-full h-full object-cover' />
+            </div>
         </div>
     )
 }
