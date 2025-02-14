@@ -148,9 +148,17 @@ function DataList({ groupDataList }: { groupDataList: GroupDataList }) {
 
 function DataCard( { groupData }: { groupData: GroupData }) {
     const [imageUrl, setImageUrl] = useState<string>('')
+    const [imageLoading, setImageLoading] = useState<boolean>(true)
+
     useEffect(() => {
+        //画像のローディングを開始
+        setImageLoading(true)
+        //画像の取得
         getImage(groupData.image).then((url) => {
+            //画像のURLをセット
             setImageUrl(url)
+            //画像のローディングを終了
+            setImageLoading(false)
         })
     }, [groupData])
 
@@ -173,9 +181,11 @@ function DataCard( { groupData }: { groupData: GroupData }) {
                 </div>
             </div>
             <div className='w-[50%] h-full'>
-                {imageUrl &&
-                    <img src={imageUrl} className='w-full h-full object-cover' />
-                }
+                {imageLoading ? (
+                    <Loading disabled={!imageLoading}/>
+                ) : (
+                    imageUrl && <img src={imageUrl} className='w-full h-full object-cover' />
+                )}
             </div>
         </div>
     )
