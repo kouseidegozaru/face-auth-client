@@ -2,10 +2,10 @@ import { Message , OpenChildren} from '@/app/_components/message'
 import { Button } from '@/app/_components/buttons'
 import { UserInput } from '@/app/_components/input'
 import { useState } from 'react'
-import { CreateTrainingGroup } from '@/app/_requests/recongnizer'
+import { CreateTrainingData } from '@/app/_requests/recongnizer'
 import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useMessageModal } from '@/app/_components/MessageModal'
-import { GroupPage } from '@/app/_links/recognizer'
+import { GroupDataPage } from '@/app/_links/recognizer'
 import Loading from '@/app/_components/loading'
 
 export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { isOpen: boolean , closeButtonEvent: () => void }) {
@@ -19,7 +19,7 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { is
         const newErrors : any = { ...errors }
 
         if (!value) {
-            newErrors.name = "グループ名を入力してください"
+            newErrors.name = "画像ラベルを入力してください"
         } else {
             delete newErrors.name
         }
@@ -32,9 +32,9 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { is
             <OpenChildren isOpen={isOpen}>
                 <Message closeButtonEvent={closeButtonEvent}>
                     <div className='h-full w-full flex items-center flex-col justify-center'>
-                        <p className="m-[30px] text-sm font-bold">新規グループを作成します</p>
+                        <p className="m-[30px] text-sm font-bold">新規データを登録します</p>
                         <UserInput
-                            label="グループ名"
+                            label="ラベル名"
                             inputValue={name}
                             setInputValue={(value) => { setName(value); validate(value) }}
                             errorMessage={errors.name}
@@ -46,18 +46,18 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { is
                                             // ローディング開始
                                             setLoading(true)
                                             try {
-                                                const response = await CreateTrainingGroup(name)
+                                                const response = await CreateTrainingData(name)
                                                 if (response.ok) {
                                                     setName("")
-                                                    GroupPage.Redirect()
+                                                    GroupDataPage.Redirect()
                                                 }
                                             } catch (e) {
                                                 if (e instanceof SessionError) {
                                                     showModal("ログインしてください", "error", 4000)
                                                 } else if (e instanceof CsrfTokenError) {
-                                                    showModal("グループの作成に失敗しました", "error", 4000)
+                                                    showModal("データの登録に失敗しました", "error", 4000)
                                                 } else {
-                                                    showModal("グループの作成に失敗しました", "error", 4000)
+                                                    showModal("データの登録に失敗しました", "error", 4000)
                                                 }
                                             } finally {
                                                 // ローディング終了
