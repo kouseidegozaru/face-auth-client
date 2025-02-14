@@ -8,7 +8,7 @@ import { useMessageModal } from '@/app/_components/MessageModal'
 import { GroupDataPage } from '@/app/_links/recognizer'
 import Loading from '@/app/_components/loading'
 
-export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { isOpen: boolean , closeButtonEvent: () => void }) {
+export default function GroupRegisterMessage({ isOpen , closeButtonEvent , group_id }: { isOpen: boolean , closeButtonEvent: () => void , group_id: string }) {
     const [name, setName] = useState("")
     const [errors, setErrors] : any = useState({})
     const { showModal, Modal } = useMessageModal()
@@ -46,10 +46,10 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent }: { is
                                             // ローディング開始
                                             setLoading(true)
                                             try {
-                                                const response = await CreateTrainingData(name)
+                                                const response = await CreateTrainingData(group_id, name)
                                                 if (response.ok) {
                                                     setName("")
-                                                    GroupDataPage.Redirect()
+                                                    GroupDataPage.Redirect({linkKey: group_id})
                                                 }
                                             } catch (e) {
                                                 if (e instanceof SessionError) {
