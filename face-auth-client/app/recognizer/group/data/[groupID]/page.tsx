@@ -8,6 +8,7 @@ import { GetTrainingData } from '@/app/_requests/recongnizer'
 import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useState , useEffect, use } from 'react'
 import { useMessageModal } from '@/app/_components/MessageModal'
+import { getImage } from '@/app/_requests/media'
 
 type GroupData = {
     id: string,
@@ -136,6 +137,12 @@ function DataList({ groupDataList }: { groupDataList: GroupDataList }) {
 }
 
 function DataCard( { groupData }: { groupData: GroupData }) {
+    const [imageUrl, setImageUrl] = useState<string>('')
+    useEffect(() => {
+        getImage(groupData.image).then((url) => {
+            setImageUrl(url)
+        })
+    }, [groupData])
 
     const formatUpdatedAt = (date: string) => {
         const d = new Date(date);
@@ -156,7 +163,9 @@ function DataCard( { groupData }: { groupData: GroupData }) {
                 </div>
             </div>
             <div className='w-[50%] h-full'>
-                <img src="https://source.unsplash.com/random/400x200" className='w-full h-full object-cover' />
+                {imageUrl &&
+                    <img src={imageUrl} className='w-full h-full object-cover' />
+                }
             </div>
         </div>
     )
