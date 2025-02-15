@@ -149,10 +149,18 @@ function DataList({ groupDataList }: { groupDataList: GroupDataList }) {
 }
 
 function DataCard( { groupData }: { groupData: GroupData }) {
+    const [label, setLabel] = useState<string>('')
     const [imageUrl, setImageUrl] = useState<string>('')
     const [imageLoading, setImageLoading] = useState<boolean>(true)
+    const [isEditing, setIsEditing] = useState<boolean>(false)
+    const [newLabel, setNewLabel] = useState<string>('')
+    const [newImage, setNewImage] = useState<File | null>(null)
+    const [newImageURL, setNewImageURL] = useState<string>('')
 
     useEffect(() => {
+        //ラベルのセット
+        setLabel(groupData.label)
+        
         //画像のローディングを開始
         setImageLoading(true)
         //画像の取得
@@ -164,6 +172,58 @@ function DataCard( { groupData }: { groupData: GroupData }) {
         })
     }, [groupData])
 
+    const startEditing = () => {
+        setIsEditing(true)
+        setNewLabel(label)
+        setNewImageURL(imageUrl)
+    }
+
+    const confirmEditing = () => {
+        setIsEditing(false)
+    }
+
+    const cancelEditing = () => {
+        setIsEditing(false)
+    }
+
+    function ImageEditBox({ newImageUrl , setNewImageUrl , setNewImage }: { newImageUrl: string , setNewImageUrl: React.Dispatch<React.SetStateAction<string>> , setNewImage: React.Dispatch<React.SetStateAction<File | null>> }) {
+    
+        const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setNewImageUrl(reader.result as string);
+                };
+                reader.readAsDataURL(file);
+                setNewImage(file);
+            }
+        };
+    
+        return (
+            <div className='h-full w-full flex justify-center items-center'>
+                <div className="relative w-[85%] h-[85%] flex justify-evenly items-center border-2 border-dashed border-line rounded-lg cursor-pointer hover:border-subtext">
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleImageChange} 
+                        className="absolute border border-line w-full h-full cursor-pointer opacity-0 inset-0"
+                    />
+                    <div className="w-full h-full flex flex-col justify-center items-center cursor-pointer">
+                        {newImageUrl && (
+                            <img 
+                                src={newImageUrl} 
+                                alt="Preview" 
+                                className="w-[60%] h-[60%] object-cover border border-line rounded-lg"
+                            />
+                        )}
+                        <p className="text-[14px] text-subtext my-3">画像を選択</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     const formatUpdatedAt = (date: string) => {
         const d = new Date(date);
         return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`
@@ -171,24 +231,48 @@ function DataCard( { groupData }: { groupData: GroupData }) {
 
     return (
         <div className='w-[400px] h-[200px] min-h-[200px] border border-line m-3 rounded-lg flex overflow-hidden'>
-
-            <div className='w-[50%] h-full flex flex-col justify-between'>
-                <div>
-                    <h1 className='text-lg font-bold text-text ml-3 mt-3 overflow-hidden text-ellipsis'>{groupData.label}</h1>
-                    <p className='text-sm text-subtext ml-3'>{formatUpdatedAt(groupData.updated_at)}</p>
-                </div>
-                <div className='flex justify-start'>
-                    <EditIcon className='w-4 h-4 m-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
-                    <TrashIcon className='w-4 h-4 my-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
-                </div>
-            </div>
-            <div className='w-[50%] h-full'>
-                {imageLoading ? (
-                    <Loading disabled={!imageLoading}/>
-                ) : (
-                    imageUrl && <img src={imageUrl} className='w-full h-full object-cover' />
-                )}
-            </div>
+            {!isEditing ? (
+                <>
+                    <div className='w-[50%] h-full flex flex-col justify-between'>
+                        <div>
+                            <h1 className='text-lg font-bold text-text ml-3 mt-3 overflow-hidden text-ellipsis'>{label}</h1>
+                            <p className='text-sm text-subtext ml-3'>{formatUpdatedAt(groupData.updated_at)}</p>
+                        </div>
+                        <div className='flex justify-start'>
+                            <EditIcon onClick={startEditing} className='w-4 h-4 m-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
+                            <TrashIcon className='w-4 h-4 my-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
+                        </div>
+                    </div>
+                    <div className='w-[50%] h-full'>
+                        {imageLoading ? (
+                            <Loading disabled={!imageLoading}/>
+                        ) : (
+                            imageUrl && <img src={imageUrl} className='w-full h-full object-cover' />
+                        )}
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className='w-[50%] h-full flex flex-col justify-between'>
+                        <div>
+                            <input 
+                                type='text' 
+                                value={newLabel} 
+                                onChange={(e) => setNewLabel(e.target.value)} 
+                                className='w-[90%] h-[30px] bg-foreground rounded-[10px] border-2 border-dashed px-2 text-[14px] border-line mt-2 ml-2 mb-[2px] hover:border-subtext'
+                            />
+                            <p className='text-sm text-subtext ml-3'>{formatUpdatedAt(groupData.updated_at)}</p>
+                        </div>
+                        <div className='flex justify-start'>
+                            <p className='w-[45px] h-[30px] flex justify-center items-center rounded-[5px] text-bold text-[12px] text-foreground bg-apply hover:bg-apply_hover hover:cursor-pointer m-2' onClick={confirmEditing}>変更</p>
+                            <p className='w-[45px] h-[30px] flex justify-center items-center rounded-[5px] text-bold text-[10px] text-foreground bg-cancel hover:bg-cancel_hover hover:cursor-pointer my-2' onClick={cancelEditing}>キャンセル</p>
+                        </div>
+                    </div>
+                    <div className='w-[50%] h-full'>
+                        <ImageEditBox newImageUrl={newImageURL} setNewImageUrl={setNewImageURL} setNewImage={setNewImage}/>
+                    </div>
+                </>
+            )}
         </div>
     )
 }
