@@ -1,7 +1,7 @@
 // recognizerエンドポイントへAPIリクエストを行う
 'use client'
 
-import { baseRequest, useCsrfToken, useSessionToken } from "./modules"
+import { baseRequest, useCsrfToken, useMultipartFormData, useSessionToken } from "./modules"
 
 // APIベースURL
 const API_BASE_URL = process.env.API_BASE_URL
@@ -37,7 +37,7 @@ export async function CreateTrainingData(groupId: string, label: string, image: 
     const formData = new FormData();
     formData.append('image', image);
     formData.append('label', label);
-    return baseRequest(`${API_ROOT_URL}/training-groups/${groupId}/images/`, 'POST', formData, [useSessionToken, useCsrfToken]);
+    return baseRequest(`${API_ROOT_URL}/training-groups/${groupId}/images/`, 'POST', formData, [useSessionToken, useCsrfToken, useMultipartFormData]);
 }
 
 // 学習データの更新

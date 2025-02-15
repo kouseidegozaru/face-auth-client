@@ -50,6 +50,11 @@ async function useCsrfToken(headers: HeadersType): Promise<void> {
     headers['X-CSRFToken'] = csrfToken;
 }
 
+// multipart/form-dataを使用するオプション関数
+async function useMultipartFormData(headers: HeadersType): Promise<void> {
+    delete headers['Content-Type'];
+}
+
 // 任意のヘッダーを追加する関数
 async function addAuthHeaders(
     headers: HeadersType,
@@ -64,7 +69,7 @@ async function addAuthHeaders(
 async function baseRequest(
     url: string,
     method: string,
-    body?: object | null,
+    body?: FormData | object | null,
     customAuthFuncs: Array<(headers: HeadersType) => Promise<void>> = []
 ): Promise<Response> {
 
@@ -86,7 +91,11 @@ async function baseRequest(
 
     // bodyを含むメソッドの場合はbodyを追加
     if (body && ['POST', 'PUT', 'PATCH'].includes(method)) {
-        request.body = JSON.stringify(body);
+        if (body instanceof FormData) {
+            request.body = body;
+        } else {
+            request.body = JSON.stringify(body);
+        }
     }
 
     try {
@@ -98,4 +107,4 @@ async function baseRequest(
     }
 }
 
-export { baseRequest, useSessionToken, useCsrfToken, SessionError, CsrfTokenError }
+export { baseRequest, useSessionToken, useCsrfToken, useMultipartFormData, SessionError, CsrfTokenError }
