@@ -1,7 +1,7 @@
 import { Message , OpenChildren} from '@/app/_components/message'
 import { Button } from '@/app/_components/buttons'
 import { UserInput } from '@/app/_components/input'
-import { useState } from 'react'
+import { use, useState, useEffect } from 'react'
 import { CreateTrainingData } from '@/app/_requests/recongnizer'
 import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useMessageModal } from '@/app/_components/MessageModal'
@@ -14,6 +14,15 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent , group
     const { showModal, Modal } = useMessageModal()
     const [loading, setLoading] = useState(false)
     const [image, setImage] = useState<File | null>(null)
+    const [imageURL, setImageURL] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (image) {
+            setImageURL(URL.createObjectURL(image))
+        } else {
+            setImageURL(null)
+        }
+    }, [image])
 
     // バリデーション
     const validate = (value) => {
@@ -36,7 +45,7 @@ export default function GroupRegisterMessage({ isOpen , closeButtonEvent , group
                         <p className="m-[30px] text-sm font-bold">新規データを登録します</p>
                         <ImageContainer>
                             <FileInputButton setImage={setImage}/>
-                            {image ? <ImagePreview image={image} /> : null}
+                            {image ? <ImagePreview imageURL={imageURL} /> : null}
                         </ImageContainer>
 
                         <UserInput
@@ -103,7 +112,7 @@ const FileInputButton = ({ setImage }) => {
     const handleChange = (e) => {
         const file = e.target.files[0]
         if (file) {
-            setImage(URL.createObjectURL(file))
+            setImage(file)
         }
     }
 
@@ -115,10 +124,10 @@ const FileInputButton = ({ setImage }) => {
     )
 }
 
-const ImagePreview = ({ image : image}) => {
+const ImagePreview = ({ imageURL}) => {
     return (
         <div className='w-[100px] h-[100px] flex justify-center items-center border-2 border-dashed border-line rounded'>
-            <img src={image} alt="preview" className="w-[90px] h-[90px] object-cover" />
+            <img src={imageURL} alt="preview" className="w-[90px] h-[90px] object-cover" />
         </div>
     )
 }
