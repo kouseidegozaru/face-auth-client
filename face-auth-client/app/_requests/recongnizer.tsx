@@ -41,11 +41,18 @@ export async function CreateTrainingData(groupId: string, label: string, image: 
 }
 
 // 学習データの更新
-export async function UpdateTrainingData(id: string, label: string, image: File) {
+export async function UpdateTrainingData(id: string, label?: string, image?: File) {
+    if (!label && !image) {
+        throw new Error('must specify label or image');
+    }
     const formData = new FormData();
-    formData.append('image', image);
-    formData.append('label', label);
-    return baseRequest(`${API_ROOT_URL}/training-data/${id}/`, 'PATCH', formData, [useSessionToken, useCsrfToken]);
+    if (label) {
+        formData.append('label', label);
+    }
+    if (image) {
+        formData.append('image', image);
+    }
+    return baseRequest(`${API_ROOT_URL}/training-data/${id}/`, 'PATCH', formData, [useSessionToken, useCsrfToken, useMultipartFormData]);
 }
 
 // 学習データの削除
