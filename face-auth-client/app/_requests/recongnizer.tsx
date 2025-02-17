@@ -66,17 +66,17 @@ export async function Train(groupId: string) {
 }
 
 // 推論リクエストの取得
-export async function usePredictRequest() : Promise<(image: File) => Promise<Response>> {
+export async function usePredictRequest() : Promise<(groupId: string, image: File) => Promise<Response>> {
     
     // 認証情報の取得
     const usePreFetchedSessionToken = await preFetchSessionToken();
     const usePreFetchedCsrfToken = await preFetchCsrfToken();
 
     // 推論
-    async function Predict(image: File) {
+    async function Predict(groupId: string, image: File) {
         const formData = new FormData();
         formData.append('image', image);
-        return baseRequest(`${API_ROOT_URL}/predict/`, 'POST', formData, [usePreFetchedSessionToken, usePreFetchedCsrfToken, useMultipartFormData]);
+        return baseRequest(`${API_ROOT_URL}/predict/${groupId}/`, 'POST', formData, [usePreFetchedSessionToken, usePreFetchedCsrfToken, useMultipartFormData]);
     }
 
     return Predict
