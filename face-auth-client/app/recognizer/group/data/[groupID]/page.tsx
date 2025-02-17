@@ -275,7 +275,9 @@ function DataCard( { groupData }: { groupData: GroupData }) {
                     </div>
                     <div className='w-[50%] h-full'>
                         {imageLoading ? (
-                            <Loading disabled={!imageLoading}/>
+                            <div className='w-full h-full flex justify-center items-center'>
+                                <Loading disabled={!imageLoading}/>
+                            </div>
                         ) : (
                             imageUrl && <img src={imageUrl} className='w-full h-full object-cover' />
                         )}
