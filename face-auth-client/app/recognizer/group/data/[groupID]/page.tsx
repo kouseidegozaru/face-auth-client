@@ -11,6 +11,7 @@ import { useMessageModal } from '@/app/_components/MessageModal'
 import { getImage } from '@/app/_requests/media'
 import Loading from '@/app/_components/loading'
 import GroupRegisterMessage from '@/app/recognizer/group/data/register/message'
+import DataDeleteMessage from '@/app/recognizer/group/data/delete/message'
 
 type GroupData = {
     id: string,
@@ -157,6 +158,7 @@ function DataCard( { groupData }: { groupData: GroupData }) {
     const [newImage, setNewImage] = useState<File | undefined>(undefined)
     const [newImageURL, setNewImageURL] = useState<string>('')
     const { showModal, Modal } = useMessageModal()
+    const [ isOpenDeleteMessage , setIsOpenDeleteMessage ] = useState(false)
 
     useEffect(() => {
         //ラベルのセット
@@ -268,7 +270,7 @@ function DataCard( { groupData }: { groupData: GroupData }) {
                         </div>
                         <div className='flex justify-start'>
                             <EditIcon onClick={startEditing} className='w-4 h-4 m-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
-                            <TrashIcon className='w-4 h-4 my-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
+                            <TrashIcon onClick={() => setIsOpenDeleteMessage(true)} className='w-4 h-4 my-3 fill-none stroke-primary2 stroke-2 hover:stroke-primary2_hover hover:cursor-pointer hover:fill-line'/>
                         </div>
                     </div>
                     <div className='w-[50%] h-full'>
@@ -301,6 +303,7 @@ function DataCard( { groupData }: { groupData: GroupData }) {
                     </div>
                 </>
             )}
+            <DataDeleteMessage isOpen={isOpenDeleteMessage} closeButtonEvent={() => setIsOpenDeleteMessage(false)} group_id={groupData.group} data_id={groupData.id} label={groupData.label}/>
             <Modal />
         </div>
     )
