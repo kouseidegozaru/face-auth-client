@@ -12,6 +12,7 @@ import { getImage } from '@/app/_requests/media'
 import Loading from '@/app/_components/loading'
 import GroupRegisterMessage from '@/app/recognizer/group/data/register/message'
 import DataDeleteMessage from '@/app/recognizer/group/data/delete/message'
+import LearningMessage from '@/app/recognizer/group/data/learning/message'
 
 type GroupData = {
     id: string,
@@ -59,7 +60,7 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
             <HeaderContainer>
                 <HeaderTitle />
                 <ButtonContainer>
-                    <LearningButton />
+                    <LearningButton group_id={groupID}/>
                     <PredictButton />
                     <RegisterButton group_id={groupID}/>
                 </ButtonContainer>
@@ -113,11 +114,12 @@ function RegisterButton({ group_id }: { group_id: string }) {
     )
 }
 
-function LearningButton() {
-
+function LearningButton({ group_id }: { group_id: string }) {
+    const [ isOpen , setIsOpen ] = useState(false)
     return (
         <>
-            <Button className="w-[80px] h-6 mr-4 text-[11px] bg-primary2 hover:bg-primary2_hover text-foreground border-line">学習</Button>
+            <LearningMessage isOpen={isOpen} closeButtonEvent={() => setIsOpen(false)} group_id={group_id}/>
+            <Button onClick={() => setIsOpen(true)} className="w-[80px] h-6 mr-4 text-[11px] bg-primary2 hover:bg-primary2_hover text-foreground border-line">学習</Button>
         </>
     )
 }
