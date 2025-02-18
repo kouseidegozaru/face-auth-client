@@ -10,8 +10,8 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { showModal, Modal } = useMessageModal();
-  const [predictRequest, setPredictRequest] = useState<((groupId: string, image: File) => Promise<Response>) | null>(null);
-  const [prevFrameData, setPrevFrameData] = useState<Uint8ClampedArray | null>(null);
+  const predictRequestRef = useRef<((groupId: string, image: File) => Promise<Response>) | null>(null)
+  const prevFrameDataRef = useRef<Uint8ClampedArray | null>(null);
   const [predictedLabel, setPredictedLabel] = useState<string>("認識中");
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
     async function setupPredictRequest() {
         try {
             const request = await usePredictRequest();
-            setPredictRequest(() => request);
+            predictRequestRef.current = request
         } catch (error) {
             if (error instanceof SessionError) {
                 showModal("ログインしてください", "error", 4000);
@@ -58,10 +58,10 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
     async function detectMotionAndSend() {
         const currentFrameData = captureFrame();
         if (!currentFrameData) return;
-        if (!predictRequest) return;
+        if (!predictRequestRef.current) return;
         // 前のフレームがある場合
-        if (prevFrameData) {
-            const diff = getFrameDiff(currentFrameData, prevFrameData);
+        if (prevFrameDataRef.current) {
+            const diff = getFrameDiff(currentFrameData, prevFrameDataRef.current);
             // 動きを検知した場合
             if (diff > 1000) {
                 const image = frameToImage(currentFrameData)
@@ -74,7 +74,7 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
               sendImage(image)
               .then(label => {setPredictedLabel(label)})
         }
-        setPrevFrameData(currentFrameData);
+        prevFrameDataRef.current = currentFrameData
     }
 
     function frameToImage(frame : Uint8ClampedArray){
@@ -82,10 +82,10 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
     }
 
     async function sendImage(image: File) {
-      if (!predictRequest) return
+      if (!predictRequestRef.current) return
       // 予測
       try {
-        const res = await predictRequest(groupID, image);
+        const res = await predictRequestRef.current(groupID, image);
         if (res.ok) {
             const data = await res.json();
             return data.label
