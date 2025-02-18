@@ -58,25 +58,36 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
     async function detectMotionAndSend() {
         const currentFrameData = captureFrame();
         if (!currentFrameData) return;
-        if (prevFrameData && predictRequest) {
+        if (prevFrameData) {
             const diff = getFrameDiff(currentFrameData, prevFrameData);
             // 動きを検知した場合
             if (diff > 1000) {
-                // 予測
-                try {
-                    const res = await predictRequest(groupID, new File([currentFrameData], "frame.jpg", { type: "image/jpeg" }));
-                    if (res.ok) {
-                        const data = await res.json();
-                        setPredictedLabel(data.label);
-                    }
-                } catch (error) {
-                    showModal("エラーが発生しました", "error", 4000);
-                }
+                const image = frameToImage(currentFrameData)
+                sendImage(image)
+                .then(label => {setPredictedLabel(label)})
             }
         }
         setPrevFrameData(currentFrameData);
     }
 
+    function frameToImage(frame : Uint8ClampedArray){
+      return new File([frame], "frame.jpg", { type: "image/jpeg" })
+    }
+
+    async function sendImage(image: File) {
+      if (!predictRequest) return
+      // 予測
+      try {
+        const res = await predictRequest(groupID, image);
+        if (res.ok) {
+            const data = await res.json();
+            return data.label
+        }
+      } catch (error) {
+          showModal("エラーが発生しました", "error", 4000);
+      }
+      return "認識中"
+    }
   // フレームの差分を取得
   function getFrameDiff(currentFrameData: Uint8ClampedArray, prevFrameData: Uint8ClampedArray) {
     let diff = 0;
