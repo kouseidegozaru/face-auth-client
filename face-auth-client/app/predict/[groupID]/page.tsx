@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, use } from "react";
 import { usePredictRequest } from "@/app/_requests/recongnizer";
 import { SessionError, CsrfTokenError } from "@/app/_requests/modules";
 import { useMessageModal } from "@/app/_components/MessageModal";
 
-export default function VideoCapture() {
+export default function VideoCapture({ params }: { params: Promise<{ groupID: string }> }) {
+  const { groupID } = use(params)
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { showModal, Modal } = useMessageModal();
@@ -62,7 +63,7 @@ export default function VideoCapture() {
             if (diff > 1000) {
                 // 予測
                 try {
-                    const res = await predictRequest('groupID', new File([currentFrameData], "frame.jpg", { type: "image/jpeg" }));
+                    const res = await predictRequest(groupID, new File([currentFrameData], "frame.jpg", { type: "image/jpeg" }));
                     if (res.ok) {
                         
                     }
