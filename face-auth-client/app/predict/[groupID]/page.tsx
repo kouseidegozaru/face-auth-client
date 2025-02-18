@@ -12,6 +12,7 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
   const { showModal, Modal } = useMessageModal();
   const [predictRequest, setPredictRequest] = useState<((groupId: string, image: File) => Promise<Response>) | null>(null);
   const [prevFrameData, setPrevFrameData] = useState<Uint8ClampedArray | null>(null);
+  const [predictedLabel, setPredictedLabel] = useState<string>("認識中");
 
   useEffect(() => {
 
@@ -65,7 +66,8 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
                 try {
                     const res = await predictRequest(groupID, new File([currentFrameData], "frame.jpg", { type: "image/jpeg" }));
                     if (res.ok) {
-                        
+                        const data = await res.json();
+                        setPredictedLabel(data.label);
                     }
                 } catch (error) {
                     showModal("エラーが発生しました", "error", 4000);
@@ -106,6 +108,11 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
     <div className="flex flex-col items-center">
       <video ref={videoRef} autoPlay playsInline className="w-full h-full border rounded-md shadow-md" />
       <canvas ref={canvasRef} className="hidden" />
+      <div className="fixed bottom-[50px] w-full h-12 flex justify-center z-[1002]">
+        <div className="flex items-center justify-center w-[300px] h-12 bg-foreground p-4 rounded-[20px] shadow-md border border-line text-text font-bold">
+          {predictedLabel}
+        </div>
+      </div>
       <Modal />
     </div>
   );
