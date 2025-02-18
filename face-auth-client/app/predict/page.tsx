@@ -1,12 +1,36 @@
 "use client"
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePredictRequest } from "@/app/_requests/recongnizer";
+import { SessionError, CsrfTokenError } from "@/app/_requests/modules";
+import { useMessageModal } from "@/app/_components/MessageModal";
 
 export default function VideoCapture() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { showModal, Modal } = useMessageModal();
+  const [predictRequest, setPredictRequest] = useState<((groupId: string, image: File) => Promise<Response>) | null>(null);
 
   useEffect(() => {
+
+    // 予測リクエストの設定
+    async function setupPredictRequest() {
+        try {
+            const request = await usePredictRequest();
+            setPredictRequest(() => request);
+        } catch (error) {
+            if (error instanceof SessionError) {
+                showModal("ログインしてください", "error", 4000);
+            } else if (error instanceof CsrfTokenError) {
+                showModal("エラーが発生しました", "error", 4000);
+            } else {
+                showModal("エラーが発生しました", "error", 4000);
+            }
+        }
+    }
+
+    setupPredictRequest();
+
     // カメラ映像を取得
     async function setupCamera() {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -58,6 +82,7 @@ export default function VideoCapture() {
     <div className="flex flex-col items-center">
       <video ref={videoRef} autoPlay playsInline className="w-full h-full border rounded-md shadow-md" />
       <canvas ref={canvasRef} className="hidden" />
+      <Modal />
     </div>
   );
 }
