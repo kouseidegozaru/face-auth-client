@@ -27,6 +27,20 @@ export default function VideoCapture() {
 
   }, []);
 
+  // フレームの差分を取得
+  function getFrameDiff(currentFrameData: Uint8ClampedArray, prevFrameData: Uint8ClampedArray) {
+    let diff = 0;
+    for (let i = 0; i < currentFrameData.length; i += 4) {
+      const rDiff = Math.abs(currentFrameData[i] - prevFrameData[i]);
+      const gDiff = Math.abs(currentFrameData[i + 1] - prevFrameData[i + 1]);
+      const bDiff = Math.abs(currentFrameData[i + 2] - prevFrameData[i + 2]);
+      if (rDiff + gDiff + bDiff > 50) {
+        diff++;
+      }
+    }
+    return diff;
+  }
+
   // フレームの取得
   function captureFrame() : Uint8ClampedArray | null {
     if (videoRef.current && canvasRef.current) {
