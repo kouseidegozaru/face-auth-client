@@ -17,6 +17,14 @@ export default function VideoCapture() {
 
     setupCamera();
 
+    // フレーム解析の定期実行
+    const interval = setInterval(() => {
+        console.log('test');
+    }, 1000);
+
+    // ページが閉じられたらタイマーを止める
+    return () => clearInterval(interval);
+
   }, []);
 
   return (
