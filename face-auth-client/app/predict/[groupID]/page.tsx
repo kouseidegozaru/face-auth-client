@@ -58,6 +58,8 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
     async function detectMotionAndSend() {
         const currentFrameData = captureFrame();
         if (!currentFrameData) return;
+        if (!predictRequest) return;
+        // 前のフレームがある場合
         if (prevFrameData) {
             const diff = getFrameDiff(currentFrameData, prevFrameData);
             // 動きを検知した場合
@@ -66,6 +68,11 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
                 sendImage(image)
                 .then(label => {setPredictedLabel(label)})
             }
+        // 前のフレームがない場合
+        } else {
+          const image = frameToImage(currentFrameData)
+              sendImage(image)
+              .then(label => {setPredictedLabel(label)})
         }
         setPrevFrameData(currentFrameData);
     }
