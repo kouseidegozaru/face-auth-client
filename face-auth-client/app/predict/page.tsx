@@ -10,6 +10,7 @@ export default function VideoCapture() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { showModal, Modal } = useMessageModal();
   const [predictRequest, setPredictRequest] = useState<((groupId: string, image: File) => Promise<Response>) | null>(null);
+  const [prevFrameData, setPrevFrameData] = useState<Uint8ClampedArray | null>(null);
 
   useEffect(() => {
 
@@ -43,13 +44,35 @@ export default function VideoCapture() {
 
     // フレーム解析の定期実行
     const interval = setInterval(() => {
-        console.log('test');
+        detectMotionAndSend();
     }, 1000);
 
     // ページが閉じられたらタイマーを止める
     return () => clearInterval(interval);
 
   }, []);
+
+    // 動きを検知して送信
+    async function detectMotionAndSend() {
+        const currentFrameData = captureFrame();
+        if (!currentFrameData) return;
+        if (prevFrameData && predictRequest) {
+            const diff = getFrameDiff(currentFrameData, prevFrameData);
+            // 動きを検知した場合
+            if (diff > 1000) {
+                // 予測
+                try {
+                    const res = await predictRequest('groupID', new File([currentFrameData], "frame.jpg", { type: "image/jpeg" }));
+                    if (res.ok) {
+                        
+                    }
+                } catch (error) {
+                    showModal("エラーが発生しました", "error", 4000);
+                }
+            }
+        }
+        setPrevFrameData(currentFrameData);
+    }
 
   // フレームの差分を取得
   function getFrameDiff(currentFrameData: Uint8ClampedArray, prevFrameData: Uint8ClampedArray) {
