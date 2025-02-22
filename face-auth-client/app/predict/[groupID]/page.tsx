@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, use } from "react";
 import { usePredictRequest } from "@/app/_requests/recongnizer";
 import { SessionError, CsrfTokenError } from "@/app/_requests/modules";
 import { useMessageModal } from "@/app/_components/MessageModal";
+import TitleIcon from "../../../public/User check.svg"
 
 export default function VideoCapture({ params }: { params: Promise<{ groupID: string }> }) {
   const { groupID } = use(params)
@@ -155,6 +156,12 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
 
   return (
     <div className="flex flex-col items-center w-full h-full bg-background">
+      <div className="fixed bg-foreground top-4 left-4 rounded-[10px] shadow-md z-[1001]">
+        <div className="flex items-center my-2 mx-4">
+            <TitleIcon className="w-8 h-8 fill-none mr-2 stroke-text"></TitleIcon>
+            <div className="font-title text-3xl">Face Auth</div>
+        </div>
+      </div>
       <video ref={videoRef} autoPlay playsInline className="w-auto h-full border rounded-md shadow-md" />
       <canvas ref={canvasRef} className="hidden" />
       <div className="fixed bottom-[50px] w-full h-12 flex justify-center z-[1002]">
