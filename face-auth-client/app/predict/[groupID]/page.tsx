@@ -47,7 +47,7 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
     // フレーム解析の定期実行
     const interval = setInterval(() => {
         detectMotionAndSend();
-    }, 1000);
+    }, 2000);
 
     // ページが閉じられたらタイマーを止める
     return () => clearInterval(interval);
