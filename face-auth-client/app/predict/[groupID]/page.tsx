@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, use } from "react";
 import { usePredictRequest } from "@/app/_requests/recongnizer";
 import { SessionError, CsrfTokenError } from "@/app/_requests/modules";
 import { useMessageModal } from "@/app/_components/MessageModal";
+import { GroupDataPage } from "@/app/_links/recognizer";
 import TitleIcon from "../../../public/User check.svg"
 
 export default function VideoCapture({ params }: { params: Promise<{ groupID: string }> }) {
@@ -161,6 +162,7 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
               <TitleIcon className="w-8 h-8 fill-none mr-2 ml-4 stroke-text"></TitleIcon>
               <div className="font-title text-3xl">Face Auth</div>
         </div>
+        <p onClick={() => groupID && GroupDataPage.Redirect({ linkKey: groupID })} className="text-[15px] text-text w-[40px] h-[40px] flex items-center justify-center bg-foreground rounded-full shadow-md cursor-pointer mt-2">◀</p>
       </div>
       <video ref={videoRef} autoPlay playsInline className="w-auto h-full border rounded-md shadow-md" />
       <canvas ref={canvasRef} className="hidden" />
