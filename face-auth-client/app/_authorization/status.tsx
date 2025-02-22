@@ -1,22 +1,18 @@
 'use server'
 
 import { getUser } from "../_requests/accounts"
-import { getSessionToken } from "../_authorization/session"
-
+import { SessionError } from "../_requests/modules";
 // ユーザーがログインしていてるかを確認
 export async function IsLogin(): Promise<boolean> {
-    // セッショントークンを取得
-    const sessionToken = await getSessionToken();
-    // セッショントークンがnullの場合はfalseを返す
-    if (sessionToken == null) {
-        return false;
-    }
-
     try {
         // ユーザー情報が正常に取得できた場合はtrueを返す
-        const response = await getUser(sessionToken);
+        const response = await getUser();
         return response.ok;
     } catch (error) {
+        // セッションエラーの場合はfalseを返す
+        if (error instanceof SessionError) {
+            return false;
+        }
         console.log(error);
         return false;
     }

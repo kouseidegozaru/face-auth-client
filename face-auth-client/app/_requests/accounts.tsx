@@ -1,43 +1,11 @@
 // usersエンドポイントへAPIリクエストを行う
+'use cilient'
+
+import { baseRequest, useSessionToken} from "./modules";
 
 // APIベースURL
 const API_BASE_URL = process.env.API_BASE_URL
 const API_ROOT_URL = `${API_BASE_URL}/users`
-
-// APIリクエストを行う共通の関数
-async function requestApi(endpoint: string, method: string, body: object | null, token: string | null = null): Promise<Response> {
-    
-    // リクエストヘッダー
-    const headers: Record<string, string> = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    };
-
-    // 認証トークンをヘッダーに追加
-    if (token) {
-        headers['Authorization'] = `Token ${token}`;
-    }
-
-    // リクエストオブジェクト
-    const request : RequestInit = {
-        method: method,
-        headers: headers
-    }
-
-    // メソッドがPOSTの場合、bodyを追加
-    if (method === 'POST') {
-        request.body = JSON.stringify(body);
-    }
-
-    try {
-        // APIリクエスト
-        const response = await fetch(`${API_ROOT_URL}${endpoint}`, request);
-        return response
-    } catch (error) {
-        console.error('API request failed:', error);
-        throw error;
-    }
-}
 
 // ユーザー登録
 export async function registerUser(
@@ -46,7 +14,7 @@ export async function registerUser(
     password1: string,
     password2: string
 ) {
-    return requestApi('/registration/', 'POST', {
+    return baseRequest(`${API_ROOT_URL}/registration/`, 'POST', {
         name: username,
         email,
         password1,
@@ -56,27 +24,27 @@ export async function registerUser(
 
 // 登録メール認証
 export async function verifyRegistrationEmail(token: string) {
-    return requestApi('/registration/verify-email/', 'POST', { key: token });
+    return baseRequest(`${API_ROOT_URL}/registration/verify-email/`, 'POST', { key: token });
 }
 
 // 登録メール再送
 export async function resendRegistrationEmail(email: string) {
-    return requestApi('/registration/resend-email/', 'POST', { email });
+    return baseRequest(`${API_ROOT_URL}/registration/resend-email/`, 'POST', { email });
 }
 
 // ログイン
 export async function loginUser(email: string, password: string) {
-    return requestApi('/login/', 'POST', { email, password });
+    return baseRequest(`${API_ROOT_URL}/login/`, 'POST', { email, password });
 }
 
 // ログアウト
-export async function logoutUser(sessionToken: string) {
-    return requestApi('/logout/', 'POST', {}, sessionToken);
+export async function logoutUser() {
+    return baseRequest(`${API_ROOT_URL}/logout/`, 'POST', {}, [useSessionToken]);
 }
 
 // パスワードリセットメール送信
 export async function sendPasswordResetEmail(email: string) {
-    return requestApi('/password/reset/', 'POST', { email });
+    return baseRequest(`${API_ROOT_URL}/password/reset/`, 'POST', { email });
 }
 
 // パスワードリセット
@@ -86,7 +54,7 @@ export async function confirmPasswordReset(
     newPassword1: string,
     newPassword2: string
 ) {
-    return requestApi('/password/reset/confirm/', 'POST', {
+    return baseRequest(`${API_ROOT_URL}/password/reset/confirm/`, 'POST', {
         token,
         uid,
         new_password1: newPassword1,
@@ -95,11 +63,14 @@ export async function confirmPasswordReset(
 }
 
 // ログイン中のユーザー情報取得
-export async function getUser(sessionToken: string) {
-    return requestApi('/user/', 'GET', {}, sessionToken);
+export async function getUser() {
+    return baseRequest(`${API_ROOT_URL}/user/`, 'GET', {}, [useSessionToken]);
 }
 
 // csrfトークンの発行
-export async function getCSRFToken() {
-    return requestApi('/csrf-token/', 'GET', {});
+export async function getCSRFToken() : Promise<string | null> {
+    const response = await baseRequest(`${API_ROOT_URL}/csrf-token/`, 'GET', {});
+    const data = await response.json();
+    const { csrfToken } = data;
+    return csrfToken
 }

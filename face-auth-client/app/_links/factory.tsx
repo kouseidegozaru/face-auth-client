@@ -1,37 +1,43 @@
+'use client';
+
 import Link from 'next/link';
 
 type GeneratedPath = {
-    Link : React.FC<{ children: React.ReactNode }>,
-    Redirect : () => void
-}
+    Link: React.FC<{ children: React.ReactNode; linkKey?: string | null }>;
+    Redirect: ({ linkKey }?: { linkKey?: string | null }) => void;
+};
 
 /**
  * Linkコンポーネントを生成する高階関数
  *
  * @param {string} path - The path to link to.
- * @returns {React.FC<{ children: React.ReactNode }>} - A function component
+ * @returns {GeneratedPath} - LinkとRedirectを含むオブジェクト
  */
 const FactoryPath = (path: string): GeneratedPath => {
-    
-    if (!path) {
-        path = '/'
-    }
+    const basePath = path || '/';
 
     /**
-     * 指定されたリンクに遷移するコンポーネント
-     *
-     * @param {{ children: React.ReactNode }} props - Props to pass to the component.
-     * @returns {JSX.Element} - The component.
-     */
-    const GeneratedLink = ({ children }: { children: React.ReactNode }): JSX.Element => {
-        return <Link href={`${path}`}>{children}</Link>;
+ * 指定されたリンクに遷移するコンポーネント
+ *
+ * @param {{ children: React.ReactNode; linkKey?: string }} props - Props to pass to the component.
+ * @returns {JSX.Element} - The component.
+ */
+    const GeneratedLink: React.FC<{ children: React.ReactNode; linkKey?: string | null }> = ({ children, linkKey }) => {
+        const href = linkKey ? `${basePath}/${linkKey}` : basePath;
+        return <Link href={href}>{children}</Link>;
     };
 
-    const GeneratedRouter = (): void => {
-        window.location.href = path
-    }
+    /**
+     * リンク遷移を実行する関数
+     *
+     * @param {string} linkKey - オプションのリンクキー
+     */
+    const GeneratedRouter = ({ linkKey }: { linkKey?: string | null } = {}): void => {
+        const href = linkKey ? `${basePath}/${linkKey}` : basePath;
+        window.location.href = href;
+    };
 
     return { Link: GeneratedLink, Redirect: GeneratedRouter };
 };
 
-export default FactoryPath
+export default FactoryPath;

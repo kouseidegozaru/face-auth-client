@@ -12,7 +12,8 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     useEffect(() => {
         const verifyEmail = async () => {
           try {
-            const res = await verifyRegistrationEmail(token);
+            const decodedToken = decodeURIComponent(token);
+            const res = await verifyRegistrationEmail(decodedToken);
             if (res.status === 200) {
               setIsSuccessLogin(true);
             } else {

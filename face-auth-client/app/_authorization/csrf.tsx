@@ -3,6 +3,6 @@
 
 import { setCookie } from "./cookie";
 
-export async function setCsrfToken(csrfToken: string) : Promise<void> {
+export async function setCsrfTokenInServerSide(csrfToken: string) : Promise<void> {
     return await setCookie('csrftoken', csrfToken);
 }

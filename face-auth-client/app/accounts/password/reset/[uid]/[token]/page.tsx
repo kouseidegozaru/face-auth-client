@@ -10,10 +10,12 @@ import { UserInput , PasswordInput } from "@/app/_components/input"
 
 export default function Page({ params }: { params: Promise<{ uid: string; token: string; }> }) {
     const { uid, token } = React.use(params)
+    const decodedUid = decodeURIComponent(uid);
+    const decodedToken = decodeURIComponent(token);
     return (
         <>
             <Header />
-            <ContentContainer uid={uid} token={token}/>
+            <ContentContainer uid={decodedUid} token={decodedToken}/>
         </>
     );
 }
