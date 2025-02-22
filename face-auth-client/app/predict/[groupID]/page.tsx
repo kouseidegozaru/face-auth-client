@@ -66,7 +66,7 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
         if (prevFrameDataRef.current) {
             const diff = getFrameDiff(currentFrameData, prevFrameDataRef.current);
             // 動きを検知した場合
-            if (diff > 1000) {
+            if (diff > 13000) {
                 const image = blobToImage(currentBlobData)
                 sendImage(image)
                 .then(label => {setPredictedLabel(label)})
