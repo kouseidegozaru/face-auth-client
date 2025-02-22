@@ -154,8 +154,8 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
   }
 
   return (
-    <div className="flex flex-col items-center">
-      <video ref={videoRef} autoPlay playsInline className="w-full h-full border rounded-md shadow-md" />
+    <div className="flex flex-col items-center w-full h-full bg-background">
+      <video ref={videoRef} autoPlay playsInline className="w-auto h-full border rounded-md shadow-md" />
       <canvas ref={canvasRef} className="hidden" />
       <div className="fixed bottom-[50px] w-full h-12 flex justify-center z-[1002]">
         <div className="flex items-center justify-center w-[300px] h-12 bg-foreground p-4 rounded-[20px] shadow-md border border-line text-text font-bold">
