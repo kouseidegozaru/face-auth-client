@@ -156,10 +156,10 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
 
   return (
     <div className="flex flex-col items-center w-full h-full bg-background">
-      <div className="fixed bg-foreground top-4 left-4 rounded-[10px] shadow-md z-[1001]">
-        <div className="flex items-center my-2 mx-4">
-            <TitleIcon className="w-8 h-8 fill-none mr-2 stroke-text"></TitleIcon>
-            <div className="font-title text-3xl">Face Auth</div>
+      <div className="fixed top-4 left-4 z-[1001]">
+        <div className="flex items-center w-[220px] h-[50px] bg-foreground rounded-[10px] shadow-md ">
+              <TitleIcon className="w-8 h-8 fill-none mr-2 ml-4 stroke-text"></TitleIcon>
+              <div className="font-title text-3xl">Face Auth</div>
         </div>
       </div>
       <video ref={videoRef} autoPlay playsInline className="w-auto h-full border rounded-md shadow-md" />
