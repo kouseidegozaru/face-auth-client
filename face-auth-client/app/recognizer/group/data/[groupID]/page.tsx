@@ -4,6 +4,7 @@ import LearningIcon from '../../../../../public/Learning.svg'
 import EditIcon from '../../../../../public/Edit.svg'
 import TrashIcon from '../../../../../public/Trash.svg'
 import { Button } from '@/app/_components/buttons'
+import { PredictPage } from '@/app/_links/recognizer'
 import { GetTrainingData , UpdateTrainingData } from '@/app/_requests/recongnizer'
 import { SessionError, CsrfTokenError } from '@/app/_requests/modules'
 import { useState , useEffect, use } from 'react'
@@ -61,7 +62,7 @@ export default function Page({ params }: { params: Promise<{ groupID: string }> 
                 <HeaderTitle />
                 <ButtonContainer>
                     <LearningButton group_id={groupID}/>
-                    <PredictButton />
+                    <PredictButton group_id={groupID}/>
                     <RegisterButton group_id={groupID}/>
                 </ButtonContainer>
             </HeaderContainer>
@@ -123,12 +124,12 @@ function LearningButton({ group_id }: { group_id: string }) {
         </>
     )
 }
-function PredictButton() {
+function PredictButton({ group_id }: { group_id: string }) {
 
     return (
-        <>
+        <PredictPage.Link linkKey={group_id}>
             <Button className="w-[80px] h-6 mr-4 text-[11px] bg-primary2 hover:bg-primary2_hover text-foreground border-line">予測</Button>
-        </>
+        </PredictPage.Link>
     )
 }
 
