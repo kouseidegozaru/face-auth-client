@@ -56,7 +56,10 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
 
     // 動きを検知して送信
     async function detectMotionAndSend() {
-        const currentFrameData = captureFrame();
+        if (!videoRef.current || !canvasRef.current) return;
+        const currentBlobData = await captureBlob(videoRef.current, canvasRef.current);
+        if (!currentBlobData) return
+        const currentFrameData = await blobToFrame(currentBlobData);
         if (!currentFrameData) return;
         if (!predictRequestRef.current) return;
         // 前のフレームがある場合
@@ -64,21 +67,36 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
             const diff = getFrameDiff(currentFrameData, prevFrameDataRef.current);
             // 動きを検知した場合
             if (diff > 1000) {
-                const image = frameToImage(currentFrameData)
+                const image = blobToImage(currentBlobData)
                 sendImage(image)
                 .then(label => {setPredictedLabel(label)})
             }
         // 前のフレームがない場合
         } else {
-          const image = frameToImage(currentFrameData)
+          const image = blobToImage(currentBlobData)
               sendImage(image)
               .then(label => {setPredictedLabel(label)})
         }
         prevFrameDataRef.current = currentFrameData
     }
 
-    function frameToImage(frame : Uint8ClampedArray){
-      return new File([frame], "frame.jpg", { type: "image/jpeg" })
+    function blobToImage(blob : Blob) : File {
+      return new File([blob], "frame.jpg", { type: "image/jpeg" })
+    }
+
+    function blobToFrame(blob : Blob) : Promise<Uint8ClampedArray> {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const arrayBuffer = reader.result as ArrayBuffer;
+          const uint8Array = new Uint8Array(arrayBuffer);
+          resolve(new Uint8ClampedArray(uint8Array))
+        }
+        reader.onerror = () => {
+          reject(reader.error)
+        }
+        reader.readAsArrayBuffer(blob)
+      })
     }
 
     async function sendImage(image: File) {
@@ -110,16 +128,29 @@ export default function VideoCapture({ params }: { params: Promise<{ groupID: st
   }
 
   // フレームの取得
-  function captureFrame() : Uint8ClampedArray | null {
-    if (videoRef.current && canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-        const currentFrameData = ctx.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height).data;
-        return currentFrameData
+  function captureBlob(video: HTMLVideoElement, canvas: HTMLCanvasElement): Promise<Blob | null> {
+    return new Promise((resolve) => {
+      if (!video || !canvas) {
+        return null;
       }
-    }
-    return null
+
+      const context = canvas.getContext("2d");
+      if (!context) {
+        return null;
+      }
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0);
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          resolve(null);
+        }
+      }, "image/jpeg");
+    });
   }
 
   return (
