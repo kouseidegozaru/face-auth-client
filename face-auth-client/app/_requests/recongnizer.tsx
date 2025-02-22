@@ -1,7 +1,7 @@
 // recognizerエンドポイントへAPIリクエストを行う
 'use client'
 
-import { baseRequest, useCsrfToken, useMultipartFormData, useSessionToken } from "./modules"
+import { baseRequest, useCsrfToken, useMultipartFormData, useSessionToken, preFetchSessionToken, preFetchCsrfToken } from "./modules"
 
 // APIベースURL
 const API_BASE_URL = process.env.API_BASE_URL
@@ -65,9 +65,19 @@ export async function Train(groupId: string) {
     return baseRequest(`${API_ROOT_URL}/train/${groupId}/`, 'POST', null, [useSessionToken, useCsrfToken]);
 }
 
-// 推論
-export async function Predict(image: File) {
-    const formData = new FormData();
-    formData.append('image', image);
-    return baseRequest(`${API_ROOT_URL}/predict/`, 'POST', formData, [useSessionToken, useCsrfToken]);
+// 推論リクエストの取得
+export async function usePredictRequest() : Promise<(groupId: string, image: File) => Promise<Response>> {
+    
+    // 認証情報の取得
+    const usePreFetchedSessionToken = await preFetchSessionToken();
+    const usePreFetchedCsrfToken = await preFetchCsrfToken();
+
+    // 推論
+    async function Predict(groupId: string, image: File) {
+        const formData = new FormData();
+        formData.append('image', image);
+        return baseRequest(`${API_ROOT_URL}/predict/${groupId}/`, 'POST', formData, [usePreFetchedSessionToken, usePreFetchedCsrfToken, useMultipartFormData]);
+    }
+
+    return Predict
 }

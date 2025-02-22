@@ -55,6 +55,31 @@ async function useMultipartFormData(headers: HeadersType): Promise<void> {
     delete headers['Content-Type'];
 }
 
+// あらかじめセッショントークンを取得しておくオプション関数
+async function preFetchSessionToken() : Promise<(headers: HeadersType) => Promise<void>> {
+    const sessionToken = await GetSessionToken();
+    if (!sessionToken) {
+        throw new SessionError();
+    }
+    const usePreFetchedSessionToken = async (headers: HeadersType) : Promise<void> => {
+        headers['Authorization'] = `Token ${sessionToken}`
+    }
+    return usePreFetchedSessionToken
+}
+
+// あらかじめCSRFトークンを取得しておくオプション関数
+async function preFetchCsrfToken() : Promise<(headers: HeadersType) => Promise<void>> {
+    const csrfToken = await getCSRFToken();
+    if (!csrfToken) {
+        throw new CsrfTokenError();
+    }
+    await SetCsrfToken(csrfToken);
+    const usePreFetchedCsrfToken = async (headers: HeadersType) : Promise<void> => {
+        headers['X-CSRFToken'] = csrfToken;
+    }
+    return usePreFetchedCsrfToken
+}
+
 // 任意のヘッダーを追加する関数
 async function addAuthHeaders(
     headers: HeadersType,
@@ -107,4 +132,4 @@ async function baseRequest(
     }
 }
 
-export { baseRequest, useSessionToken, useCsrfToken, useMultipartFormData, SessionError, CsrfTokenError }
+export { baseRequest, useSessionToken, useCsrfToken, useMultipartFormData, SessionError, CsrfTokenError, preFetchSessionToken, preFetchCsrfToken };
