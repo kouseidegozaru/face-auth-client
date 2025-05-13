@@ -1,10 +1,11 @@
-'use client';
+
 
 import Link from 'next/link';
 
 type GeneratedPath = {
     Link: React.FC<{ children: React.ReactNode; linkKey?: string | null }>;
     Redirect: ({ linkKey }?: { linkKey?: string | null }) => void;
+    path: string;
 };
 
 /**
@@ -15,7 +16,6 @@ type GeneratedPath = {
  */
 const FactoryPath = (path: string): GeneratedPath => {
     const basePath = path || '/';
-
     /**
  * 指定されたリンクに遷移するコンポーネント
  *
@@ -36,8 +36,8 @@ const FactoryPath = (path: string): GeneratedPath => {
         const href = linkKey ? `${basePath}/${linkKey}` : basePath;
         window.location.href = href;
     };
-
-    return { Link: GeneratedLink, Redirect: GeneratedRouter };
+    
+    return { Link: GeneratedLink, Redirect: GeneratedRouter, path: basePath };
 };
 
 export default FactoryPath;
