@@ -160,9 +160,7 @@ function TreeItem({ group }: { group: Group }) {
 
     return (
         <div className="ml-4 mb-1">
-            <div
-            onClick={() => {GroupDataPage.Redirect({ linkKey: group.id });}}
-            className="flex items-center hover:bg-line rounded-sm overflow-hidden"
+            <div className="flex items-center hover:bg-line rounded-sm overflow-hidden"
             >
                 {/* グループの中身を開けるようにする */}
                 <span className="text-primary1 mr-1 text-[10px] select-none" onClick={() => setIsOpened(!isOpened)}>
@@ -170,7 +168,9 @@ function TreeItem({ group }: { group: Group }) {
                 </span>
                 <div className="cursor-pointer flex overflow-hidden items-center">
                     <GroupIcon className="w-4 h-4 fill-none mr-1 stroke-primary1 stroke-2"></GroupIcon>
-                    <p className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.name}</p>
+                    <p 
+                    onClick={() => {GroupDataPage.Redirect({ linkKey: group.id });}}
+                    className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.name}</p>
                 </div>
             </div>
 
