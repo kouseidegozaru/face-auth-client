@@ -8,6 +8,7 @@ import { SessionError } from "../_requests/modules"
 import { useMessageModal } from '@/app/_components/MessageModal'
 import Loading from '@/app/_components/loading'
 import LogoutMessage from '@/app/accounts/logout/message'
+import { GroupDataPage } from "../_links/recognizer";
 
 
 type Group = { id: string, name: string, updated_at: string };
@@ -137,7 +138,7 @@ function SidebarItems({ groups }: { groups: Groups }) {
 function TreeItem({ group }: { group: Group }) {
     type GroupData = { id: string, label: string, group: string, image: string, updated_at: string };
     
-  const [isOpened, setIsOpened] = useState(false);
+    const [isOpened, setIsOpened] = useState(false);
     const [groupData, setGroupData] = useState<GroupData[]>([]);
 
     const loadDataTree = async () => {
@@ -157,41 +158,41 @@ function TreeItem({ group }: { group: Group }) {
         loadDataTree();
     }, [isOpened])
 
-  return (
-    <div className="ml-4 mb-1">
-        <div
-        onClick={() => () => {{/*TODO: 画面遷移 */}}}
-        className="flex items-center hover:bg-line rounded-sm overflow-hidden"
-        >
-            {/* グループの中身を開けるようにする */}
-            <span className="text-primary1 mr-1 text-[10px] select-none" onClick={() => setIsOpened(!isOpened)}>
-                {isOpened ? "▼" : "▶"}
-            </span>
-            <div className="cursor-pointer flex overflow-hidden items-center">
-                <GroupIcon className="w-4 h-4 fill-none mr-1 stroke-primary1 stroke-2"></GroupIcon>
-                <p className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.name}</p>
+    return (
+        <div className="ml-4 mb-1">
+            <div
+            onClick={() => {GroupDataPage.Redirect({ linkKey: group.id });}}
+            className="flex items-center hover:bg-line rounded-sm overflow-hidden"
+            >
+                {/* グループの中身を開けるようにする */}
+                <span className="text-primary1 mr-1 text-[10px] select-none" onClick={() => setIsOpened(!isOpened)}>
+                    {isOpened ? "▼" : "▶"}
+                </span>
+                <div className="cursor-pointer flex overflow-hidden items-center">
+                    <GroupIcon className="w-4 h-4 fill-none mr-1 stroke-primary1 stroke-2"></GroupIcon>
+                    <p className="overflow-hidden text-ellipsis max-w-[75%] text-[14px] font-bold">{group.name}</p>
+                </div>
             </div>
-        </div>
 
-        {/* グループが開かれた場合 */}
-        {isOpened && (
-        <>
-            {/* 学習データがグループに存在する場合表示する */}
+            {/* グループが開かれた場合 */}
+            {isOpened && (
+            <>
+                {/* 学習データがグループに存在する場合表示する */}
                 {groupData && groupData.length ? (
                     groupData.map((label) => (
-                <div key={label.id} className="flex ml-[20px] cursor-pointer border-line border-l items-center hover:bg-line rounded-sm overflow-hidden">
-                    <ImageIcon className="scale-50 w-5 h-5 fill-none mr-1 stroke-subtext stroke-2"></ImageIcon>
-                    <div key={label.id} className="overflow-hidden text-ellipsis max-w-[60%] text-sm">{label.label}</div>
-                </div>
-                ))
-            ) : (
-                <div className="ml-4 text-subtext text-[12px] font-bold mt-1">学習データがありません</div>
+                    <div key={label.id} className="flex ml-[20px] cursor-pointer border-line border-l items-center hover:bg-line rounded-sm overflow-hidden">
+                        <ImageIcon className="scale-50 w-5 h-5 fill-none mr-1 stroke-subtext stroke-2"></ImageIcon>
+                        <div key={label.id} className="overflow-hidden text-ellipsis max-w-[60%] text-sm">{label.label}</div>
+                    </div>
+                    ))
+                ) : (
+                    <div className="ml-4 text-subtext text-[12px] font-bold mt-1">学習データがありません</div>
+                )}
+                </>
             )}
-            </>
-        )}
 
-    </div>
-  );
+        </div>
+    );
 }
 
 function SidebarFooter({ children }: { children: React.ReactNode }) {
